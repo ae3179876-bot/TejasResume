@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>AI Resume Analyzer | Groq AI Powered | PDF & Image Support</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- PDF.js and Tesseract.js for PDF & Image OCR support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; }
+        .header-section { text-align: center; margin-bottom: 40px; animation: fadeInDown 0.6s ease; }
+        .header-section h1 { font-size: 2.8rem; color: white; margin-bottom: 12px; font-weight: 800; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+        .header-section p { color: rgba(255,255,255,0.9); font-size: 1.1rem; }
+        .main-card { background: white; border-radius: 32px; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); animation: fadeInUp 0.6s ease; }
+        .content-wrapper { padding: 48px; }
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid #3b82f6;
+            padding-left: 16px;
+        }
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 24px;
+        }
+        .upload-area:hover { border-color: #3b82f6; background: #eff6ff; }
+        .upload-area i { font-size: 3rem; color: #3b82f6; margin-bottom: 16px; }
+        .upload-area p { margin: 4px 0; }
+        .file-hint {
+            font-size: 0.8rem;
+            color: #475569;
+            margin-top: 12px;
+            background: #f1f5f9;
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 40px;
+        }
+        .resume-textarea {
+            width: 100%;
+            min-height: 350px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            font-family: 'Inter', monospace;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            resize: vertical;
+        }
+        .resume-textarea:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+        .analyze-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .analyze-btn:hover:not(:disabled) { background: #1e293b; transform: translateY(-2px); box-shadow: 0 8px 16px -6px rgba(0,0,0,0.2); }
+        .analyze-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .results-section { margin-top: 48px; display: none; animation: fadeInUp 0.5s ease; }
+        .score-card { background: linear-gradient(135deg, #3b82f6, #2563eb); border-radius: 24px; padding: 32px; color: white; text-align: center; margin-bottom: 32px; }
+        .score-number { font-size: 4rem; font-weight: 800; }
+        .score-label { font-size: 1rem; opacity: 0.9; }
+        .analysis-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; margin-bottom: 32px; }
+        .analysis-card { background: #f8fafc; border-radius: 20px; padding: 24px; border: 1px solid #e2e8f0; }
+        .analysis-card h3 { font-size: 1.2rem; font-weight: 700; color: #1e293b; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+        .analysis-card ul { list-style: none; padding-left: 0; }
+        .analysis-card li { padding: 8px 0; color: #475569; border-bottom: 1px solid #e2e8f0; }
+        .analysis-card li:last-child { border-bottom: none; }
+        .suggestion-text { background: #fef9e3; border-left: 4px solid #f59e0b; padding: 16px; border-radius: 12px; margin-bottom: 12px; color: #92400e; line-height: 1.5; }
+        .keyword-tag { display: inline-block; background: #e0e7ff; color: #1e40af; padding: 6px 14px; border-radius: 40px; font-size: 0.85rem; margin: 4px; font-weight: 500; }
+        .loading { text-align: center; padding: 60px; }
+        .loading-spinner { width: 50px; height: 50px; border: 4px solid #e2e8f0; border-top-color: #3b82f6; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+        .back-nav { margin-bottom: 24px; }
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.3); transform: translateX(-4px); }
+        .ocr-progress {
+            font-size: 0.85rem;
+            color: #2563eb;
+            margin-top: 8px;
+            display: none;
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .header-section h1 { font-size: 1.8rem; }
+            .content-wrapper { padding: 24px; }
+            .analysis-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="back-nav">
+        <button type="button" id="backBtn" class="back-btn" >
+            <i class="fas fa-arrow-left"></i> Back to Home_Page
+        </button>
+    </div>
+    <div class="header-section">
+        <h1><i class="fas fa-brain"></i> AI Resume Analyzer</h1>
+       
+
+    <div class="main-card">
+        <div class="content-wrapper">
+            <div class="section-title">
+                <i class="fas fa-file-alt"></i>
+                <span>Your Resume Content</span>
+            </div>
+
+            <div class="upload-area" onclick="document.getElementById('resumeFile').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Click to upload a file (TXT, PDF, PNG, JPG) or paste your resume below</p>
+                <p style="font-size: 0.8rem; margin-top: 8px; color: #64748b;">Supports .txt, .pdf, .png, .jpg — AI extracts text from images & PDFs</p>
+                <div class="file-hint"><i class="fas fa-magic"></i> OCR & PDF text extraction enabled</div>
+            </div>
+            <input type="file" id="resumeFile" accept=".txt,.pdf,.png,.jpg,.jpeg" style="display: none;">
+
+            <textarea id="resumeText" class="resume-textarea" placeholder="Paste your complete resume here... OR upload PDF/Image file above for automatic extraction.&#10;&#10;Example:&#10;JOHN DOE&#10;Software Engineer&#10;john.doe@email.com | (123) 456-7890&#10;&#10;PROFESSIONAL SUMMARY&#10;Results-driven Software Engineer with 6+ years of experience...&#10;&#10;WORK EXPERIENCE&#10;Senior Software Engineer | Tech Corp | 2020-Present&#10;• Led development of microservices architecture serving 1M+ users&#10;• Improved system performance by 40% through optimization&#10;&#10;EDUCATION&#10;M.S. Computer Science, Stanford University, 2018&#10;&#10;SKILLS&#10;Python, Java, AWS, React, Docker, Kubernetes"></textarea>
+
+            <button class="analyze-btn" id="analyzeBtn" onclick="analyzeResume()">
+                <i class="fas fa-microchip"></i> Analyze with Groq AI
+            </button>
+
+            <div id="loadingIndicator" style="display: none; text-align: center; padding: 40px;">
+                <div class="loading-spinner"></div>
+                <p style="color: #64748b;">🤖 AI is analyzing your resume. This may take a few seconds...</p>
+            </div>
+
+            <div id="resultsSection" class="results-section">
+                <div class="score-card" id="scoreCard">
+                    <div class="score-number" id="atsScore">--</div>
+                    <div class="score-label">ATS Compatibility Score</div>
+                </div>
+
+                <div class="analysis-grid">
+                    <div class="analysis-card">
+                        <h3><i class="fas fa-check-circle" style="color: #10b981;"></i> Strengths</h3>
+                        <ul id="strengthsList"></ul>
+                    </div>
+                    <div class="analysis-card">
+                        <h3><i class="fas fa-exclamation-triangle" style="color: #f59e0b;"></i> Areas for Improvement</h3>
+                        <ul id="weaknessesList"></ul>
+                    </div>
+                    <div class="analysis-card">
+                        <h3><i class="fas fa-lightbulb" style="color: #8b5cf6;"></i> AI Suggestions</h3>
+                        <div id="suggestionsList"></div>
+                    </div>
+                    <div class="analysis-card">
+                        <h3><i class="fas fa-key" style="color: #3b82f6;"></i> Recommended Keywords</h3>
+                        <div id="keywordsList"></div>
+                    </div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3><i class="fas fa-clipboard-list"></i> Detailed AI Analysis</h3>
+                    <div id="detailedAnalysis" style="color: #334155; line-height: 1.7;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configure PDF.js worker (CDN)
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    // Helper: Show temporary status message
+    function showTemporaryMessage(msg, isError = false) {
+        const toast = document.createElement('div');
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.left = '50%';
+        toast.style.transform = 'translateX(-50%)';
+        toast.style.backgroundColor = isError ? '#ef4444' : '#10b981';
+        toast.style.color = 'white';
+        toast.style.padding = '12px 24px';
+        toast.style.borderRadius = '50px';
+        toast.style.fontWeight = '500';
+        toast.style.zIndex = '9999';
+        toast.style.boxShadow = '0 10px 25px -5px rgba(0,0,0,0.2)';
+        toast.style.fontFamily = "'Inter', sans-serif";
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    }
+
+    // Extract text from PDF using PDF.js
+    async function extractTextFromPDF(file) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            const pageText = textContent.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n';
+        }
+        return fullText.trim();
+    }
+
+    // Extract text from image using Tesseract.js
+    async function extractTextFromImage(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                const imgData = e.target.result;
+                try {
+                    const { data: { text } } = await Tesseract.recognize(imgData, 'eng', {
+                        logger: m => console.log(m) // optional
+                    });
+                    resolve(text.trim());
+                } catch (err) {
+                    reject(new Error('OCR failed: ' + err.message));
+                }
+            };
+            reader.onerror = () => reject(new Error('Failed to read image file'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    // Main file handler: supports TXT, PDF, PNG, JPG
+    async function handleFileUpload(file) {
+        if (!file) return null;
+        const fileName = file.name;
+        const fileExt = fileName.split('.').pop().toLowerCase();
+        
+        // Show processing message
+        showTemporaryMessage(`📄 Processing ${fileName}...`, false);
+        
+        try {
+            if (fileExt === 'txt') {
+                const text = await file.text();
+                return text;
+            } 
+            else if (fileExt === 'pdf') {
+                const text = await extractTextFromPDF(file);
+                if (!text || text.length < 20) throw new Error('PDF contains minimal or no extractable text.');
+                return text;
+            }
+            else if (['png', 'jpg', 'jpeg'].includes(fileExt)) {
+                // Image OCR
+                showTemporaryMessage(`🖼️ Performing OCR on image... this may take 5-10 seconds`, false);
+                const text = await extractTextFromImage(file);
+                if (!text || text.length < 20) throw new Error('Could not extract enough text from image. Please ensure resume is clear.');
+                return text;
+            }
+            else {
+                throw new Error('Unsupported file type. Please upload TXT, PDF, PNG, or JPG.');
+            }
+        } catch (err) {
+            console.error('Extraction error:', err);
+            showTemporaryMessage(`❌ Error: ${err.message}`, true);
+            return null;
+        }
+    }
+
+    // Override file input change event
+    document.getElementById('resumeFile').addEventListener('change', async function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Disable analyze button temporarily to avoid conflicts while processing
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const originalBtnText = analyzeBtn.innerHTML;
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Extracting text...';
+        
+        const extractedText = await handleFileUpload(file);
+        
+        if (extractedText) {
+            document.getElementById('resumeText').value = extractedText;
+            showTemporaryMessage(`✅ Successfully extracted ${extractedText.length} characters from ${file.name}`, false);
+        } else {
+            document.getElementById('resumeText').value = '';
+            // Keep existing placeholder 
+        }
+        
+        // Reset button state
+        analyzeBtn.disabled = false;
+        analyzeBtn.innerHTML = originalBtnText;
+        
+        // Clear file input value so same file can be re-uploaded if needed
+        e.target.value = '';
+    });
+
+    // Back button navigation (unchanged)
+    document.getElementById("backBtn").addEventListener("click", function() {
+        window.location.href = '/';
+    });
+
+    // Resume analysis function (Groq AI backend)
+    async function analyzeResume() {
+        const resumeText = document.getElementById('resumeText').value.trim();
+        
+        if (!resumeText) {
+            alert('Please paste your resume content or upload a TXT/PDF/Image file first!');
+            return;
+        }
+
+        if (resumeText.length < 100) {
+            alert('Please enter at least 100 characters for meaningful analysis');
+            return;
+        }
+
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const resultsSection = document.getElementById('resultsSection');
+        
+        analyzeBtn.disabled = true;
+        analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI is Thinking...';
+        loadingIndicator.style.display = 'block';
+        resultsSection.style.display = 'none';
+
+        try {
+            const response = await fetch('/analyze-resume', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ resumeText: resumeText })
+            });
+
+            const result = await response.json();
+            
+            if (result.success && result.analysis) {
+                displayResults(result.analysis);
+            } else {
+                throw new Error(result.error || 'Analysis failed');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error analyzing resume: ' + error.message);
+        } finally {
+            analyzeBtn.disabled = false;
+            analyzeBtn.innerHTML = '<i class="fas fa-microchip"></i> Analyze with Groq AI';
+            loadingIndicator.style.display = 'none';
+        }
+    }
+
+    function displayResults(analysis) {
+        const resultsSection = document.getElementById('resultsSection');
+        resultsSection.style.display = 'block';
+        
+        // Handle both string and object responses
+        let data = analysis;
+        if (typeof analysis === 'string') {
+            try {
+                data = JSON.parse(analysis);
+            } catch(e) {
+                // If not JSON, display as detailed analysis
+                document.getElementById('atsScore').textContent = '--';
+                document.getElementById('detailedAnalysis').innerHTML = analysis;
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+        }
+        
+        // Display ATS Score
+        const score = data.score || data.ats_score || data.atsScore || '--';
+        document.getElementById('atsScore').textContent = typeof score === 'number' ? score : score;
+        
+        // Display Strengths
+        const strengths = data.strengths || data.Strengths || [];
+        const strengthsList = document.getElementById('strengthsList');
+        strengthsList.innerHTML = '';
+        if (strengths.length > 0) {
+            strengths.forEach(s => {
+                strengthsList.innerHTML += `<li><i class="fas fa-check-circle" style="color: #10b981; margin-right: 10px;"></i> ${escapeHtml(s)}</li>`;
+            });
+        } else {
+            strengthsList.innerHTML = '<li>No strengths identified</li>';
+        }
+        
+        // Display Weaknesses
+        const weaknesses = data.weaknesses || data.areas_for_improvement || data.Weaknesses || [];
+        const weaknessesList = document.getElementById('weaknessesList');
+        weaknessesList.innerHTML = '';
+        if (weaknesses.length > 0) {
+            weaknesses.forEach(w => {
+                weaknessesList.innerHTML += `<li><i class="fas fa-exclamation-triangle" style="color: #f59e0b; margin-right: 10px;"></i> ${escapeHtml(w)}</li>`;
+            });
+        } else {
+            weaknessesList.innerHTML = '<li>No areas identified for improvement</li>';
+        }
+        
+        // Display Suggestions
+        const suggestions = data.suggestions || data.recommendations || data.Suggestions || [];
+        const suggestionsList = document.getElementById('suggestionsList');
+        suggestionsList.innerHTML = '';
+        if (suggestions.length > 0) {
+            suggestions.forEach(s => {
+                suggestionsList.innerHTML += `<div class="suggestion-text"><i class="fas fa-lightbulb" style="margin-right: 10px;"></i> ${escapeHtml(s)}</div>`;
+            });
+        } else {
+            suggestionsList.innerHTML = '<div class="suggestion-text">No specific suggestions available</div>';
+        }
+        
+        // Display Keywords
+        const keywords = data.keywords || data.recommended_keywords || data.Keywords || [];
+        const keywordsList = document.getElementById('keywordsList');
+        keywordsList.innerHTML = '';
+        if (keywords.length > 0) {
+            keywords.forEach(k => {
+                keywordsList.innerHTML += `<span class="keyword-tag">${escapeHtml(k)}</span>`;
+            });
+        } else {
+            keywordsList.innerHTML = '<span class="keyword-tag">No keywords extracted</span>';
+        }
+        
+        // Display Detailed Analysis
+        let detailedAnalysisText = data.detailed_analysis || data.detailedAnalysis || data.analysis || JSON.stringify(data, null, 2);
+        const detailedDiv = document.getElementById('detailedAnalysis');
+        detailedDiv.innerHTML = escapeHtml(detailedAnalysisText).replace(/\n/g, '<br>');
+        
+        // Scroll to results
+        resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Simple XSS protection
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // Optional: drag & drop enhancement for better UX (without breaking existing UI)
+    const uploadArea = document.querySelector('.upload-area');
+    if (uploadArea) {
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#3b82f6';
+            uploadArea.style.background = '#eff6ff';
+        });
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = '#cbd5e1';
+            uploadArea.style.background = '#f8fafc';
+        });
+        uploadArea.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = '#cbd5e1';
+            uploadArea.style.background = '#f8fafc';
+            const file = e.dataTransfer.files[0];
+            if (file && (file.type === 'text/plain' || file.type === 'application/pdf' || file.type.startsWith('image/'))) {
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                const originalText = analyzeBtn.innerHTML;
+                analyzeBtn.disabled = true;
+                analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Extracting...';
+                const extracted = await handleFileUpload(file);
+                if (extracted) {
+                    document.getElementById('resumeText').value = extracted;
+                    showTemporaryMessage(`✅ Extracted content from dropped file`, false);
+                }
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = originalText;
+            } else {
+                alert('Please drop a valid file: TXT, PDF, PNG, or JPG.');
+            }
+        });
+    }
+</script>
+</body>
+</html>

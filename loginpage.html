@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>RESUME'S — Sign In & Register with Google</title>
+    <!-- Google Fonts + Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Firebase SDKs (Auth + Core) -->
+    <script type="module">
+        // Import Firebase modules dynamically – we'll also place config UI later
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // ==================== YOUR FIREBASE CONFIGURATION ====================
+        // 🔥 Replace the below values with your actual Firebase project config!
+        // Go to Firebase Console → Project settings → General → Your apps → SDK setup and config.
+        const firebaseConfig = {
+             apiKey: "AIzaSyAiTq3V_SLcOuyB1Vr4hwT0ex_ZLdIeX8g",
+    authDomain: "resume-s-acc5e.firebaseapp.com",
+    projectId: "resume-s-acc5e",
+    storageBucket: "resume-s-acc5e.firebasestorage.app",
+    messagingSenderId: "798882155632",
+    appId: "1:798882155632:web:995920957c5cbd5d1a78b5",
+    measurementId: "G-R0XWG50WNS"
+
+        };
+        // ====================================================================
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegisterLink = document.getElementById('showRegister');
+        const showLoginLink = document.getElementById('showLogin');
+        const authTitle = document.getElementById('authTitle');
+        const loginContainer = document.getElementById('loginContainer');
+        const registerContainer = document.getElementById('registerContainer');
+        const messageBox = document.getElementById('messageBox');
+        const googleLoginBtn = document.getElementById('googleLoginBtn');
+        const googleRegisterBtn = document.getElementById('googleRegisterBtn');
+        const afterAuthSection = document.getElementById('afterAuthSection');
+        const userEmailSpan = document.getElementById('userEmailSpan');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const authFormsSection = document.getElementById('authFormsSection');
+
+        // Helper: Show message (error/success)
+        function showMessage(msg, isError = true) {
+            messageBox.textContent = msg;
+            messageBox.style.display = 'block';
+            messageBox.style.backgroundColor = isError ? '#fee2e2' : '#e0f2fe';
+            messageBox.style.color = isError ? '#b91c1c' : '#0c4e6e';
+            messageBox.style.borderLeft = isError ? '4px solid #dc2626' : '4px solid #0284c7';
+            setTimeout(() => {
+                messageBox.style.display = 'none';
+            }, 4000);
+        }
+
+        // Switch between login & register
+        function showLoginMode() {
+            loginContainer.style.display = 'block';
+            registerContainer.style.display = 'none';
+            authTitle.textContent = 'Welcome Back';
+            showRegisterLink.style.display = 'inline';
+            showLoginLink.style.display = 'none';
+        }
+
+        function showRegisterMode() {
+            loginContainer.style.display = 'none';
+            registerContainer.style.display = 'block';
+            authTitle.textContent = 'Create Account';
+            showRegisterLink.style.display = 'none';
+            showLoginLink.style.display = 'inline';
+        }
+
+        showRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showRegisterMode();
+        });
+        showLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            showLoginMode();
+        });
+
+        // ----- EMAIL/PASSWORD LOGIN -----
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!email || !password) {
+                showMessage('Please fill in all fields.');
+                return;
+            }
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                showMessage('Login successful! Redirecting...', false);
+                loginForm.reset();
+               setTimeout(() => {
+    window.location.href = "/userpage";
+}, 1000);
+            } catch (error) {
+                let errMsg = error.message;
+                if (error.code === 'auth/user-not-found') errMsg = 'No account found with this email.';
+                else if (error.code === 'auth/wrong-password') errMsg = 'Incorrect password.';
+                else if (error.code === 'auth/invalid-email') errMsg = 'Invalid email format.';
+                showMessage(errMsg);
+            }
+        });
+
+        // ----- EMAIL/PASSWORD REGISTER -----
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            if (!email || !password || !confirmPassword) {
+                showMessage('Please fill all fields.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match.');
+                return;
+            }
+            if (password.length < 6) {
+                showMessage('Password should be at least 6 characters.');
+                return;
+            }
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                // Send email verification (optional but good)
+                await sendEmailVerification(userCredential.user);
+                showMessage('Account created! Verification email sent. Please verify & login.', false);
+                registerForm.reset();
+                // Switch to login after 2 sec
+                setTimeout(() => showLoginMode(), 2000);
+            } catch (error) {
+                let errMsg = error.message;
+                if (error.code === 'auth/email-already-in-use') errMsg = 'Email already registered. Try logging in.';
+                else if (error.code === 'auth/invalid-email') errMsg = 'Invalid email address.';
+                else errMsg = error.message;
+                showMessage(errMsg);
+            }
+        });
+
+        // ----- GOOGLE AUTH (common for both login/register) -----
+        async function signInWithGoogle() {
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                // Successfully signed in
+                const user = result.user;
+                showMessage(`Welcome ${user.displayName || user.email}! Google sign-in successful.`, false);
+            setTimeout(() => {
+           window.location.href = "/userpage";
+        }, 1000);
+
+            } catch (error) {
+                let errMsg = error.message;
+                if (error.code === 'auth/popup-closed-by-user') errMsg = 'Popup closed before completing sign-in.';
+                else if (error.code === 'auth/account-exists-with-different-credential') errMsg = 'An account already exists with the same email but different sign-in method.';
+                else errMsg = 'Google sign-in failed: ' + error.message;
+                showMessage(errMsg);
+            }
+        }
+
+        googleLoginBtn.addEventListener('click', signInWithGoogle);
+        googleRegisterBtn.addEventListener('click', signInWithGoogle);
+
+        // ----- Monitor Auth State -----
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                authFormsSection.style.display = 'none';
+                afterAuthSection.style.display = 'block';
+                const email = user.email;
+                const displayName = user.displayName;
+                userEmailSpan.textContent = displayName ? `${displayName} (${email})` : email;
+                // Optionally show verification status
+                if (!user.emailVerified && user.providerData[0]?.providerId === 'password') {
+                    const verifyMsg = document.getElementById('verifyInfo');
+                    if (verifyMsg) verifyMsg.style.display = 'block';
+                } else {
+                    const verifyMsg = document.getElementById('verifyInfo');
+                    if (verifyMsg) verifyMsg.style.display = 'none';
+                }
+            } else {
+                // No user signed in
+                authFormsSection.style.display = 'flex';
+                afterAuthSection.style.display = 'none';
+                // reset forms visibility to login mode
+                showLoginMode();
+                // clear sensitive inputs
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('regEmail').value = '';
+                document.getElementById('regPassword').value = '';
+                document.getElementById('regConfirmPassword').value = '';
+            }
+        });
+
+        // Logout button
+        logoutBtn.addEventListener('click', async () => {
+            await auth.signOut();
+            showMessage('Logged out successfully.', false);
+        });
+
+        // initial setup: default login visible
+        showLoginMode();
+        messageBox.style.display = 'none';
+        afterAuthSection.style.display = 'none';
+        authFormsSection.style.display = 'flex';
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .glass-card {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(2px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 45px -12px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(37, 99, 235, 0.05);
+            padding: 2rem 2rem 2.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo {
+            text-align: center;
+            font-weight: 800;
+            font-size: 2rem;
+            letter-spacing: -0.5px;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+        }
+        .logo span {
+            color: #2563eb;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+        }
+
+        .auth-sub {
+            color: #475569;
+            margin-bottom: 1.8rem;
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.3rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: #1e293b;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 60px;
+            border: 1.5px solid #e2e8f0;
+            font-size: 0.95rem;
+            background: #ffffff;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 0.5rem;
+            font-family: inherit;
+        }
+
+        button[type="submit"]:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 1.5rem 0;
+            color: #94a3b8;
+            font-size: 0.8rem;
+        }
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .divider::before {
+            margin-right: 1rem;
+        }
+        .divider::after {
+            margin-left: 1rem;
+        }
+
+        .google-btn {
+            width: 100%;
+            background: white;
+            border: 1.5px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            color: #1e293b;
+            margin-bottom: 0.8rem;
+        }
+
+        .google-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .toggle-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+        .toggle-link a {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .toggle-link a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            background: #f1f5f9;
+            border-radius: 50px;
+            padding: 10px 16px;
+            margin-bottom: 1.2rem;
+            font-size: 0.8rem;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* after auth section */
+        .welcome-box {
+            text-align: center;
+        }
+        .welcome-icon {
+            background: #eef2ff;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 2rem;
+            color: #2563eb;
+        }
+        .welcome-box h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .user-detail {
+            background: #f1f5f9;
+            border-radius: 60px;
+            padding: 10px 18px;
+            margin: 20px 0;
+            word-break: break-word;
+        }
+        .btn-logout {
+            background: #ef4444;
+            width: auto;
+            padding: 10px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-logout:hover {
+            background: #dc2626;
+        }
+        .verify-note {
+            background: #fff7e5;
+            border-left: 4px solid #f59e0b;
+            font-size: 0.8rem;
+            padding: 8px 12px;
+            margin-top: 12px;
+            border-radius: 20px;
+            display: none;
+        }
+
+        @media (max-width: 520px) {
+            .glass-card {
+                padding: 1.5rem;
+            }
+            h2 {
+                font-size: 1.5rem;
+            }
+        }
+        .flex-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="glass-card">
+    <div class="logo">RESUME'S<span>.</span></div>
+
+    <!-- Dynamic message box -->
+    <div id="messageBox" class="message"></div>
+
+    <!-- Forms section (login/register) -->
+    <div id="authFormsSection" style="display: flex; flex-direction: column;">
+        <div id="loginContainer">
+            <h2 id="authTitle">Welcome Back</h2>
+            <p class="auth-sub">Sign in to continue building your dream resume</p>
+            <form id="loginForm">
+                <div class="input-group">
+                    <label>Email address</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                </div>
+                <button type="submit">Log In</button>
+            </form>
+            <div class="divider">OR</div>
+            <div class="flex-btns">
+                <button type="button" id="googleLoginBtn" class="google-btn"><i class="fab fa-google"></i> Sign in with Google</button>
+            </div>
+            <div class="toggle-link">
+                Don't have an account? <a href="#" id="showRegister">Create one</a>
+            </div>
+        </div>
+
+        <div id="registerContainer" style="display: none;">
+            <h2>Create Account</h2>
+            <p class="auth-sub">Get started with ATS-friendly resume builder</p>
+            <form id="registerForm">
+                <div class="input-group">
+                    <label>Email address</label>
+                    <input type="email" id="regEmail" placeholder="you@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password (min. 6 characters)</label>
+                    <input type="password" id="regPassword" placeholder="Create a strong password" required>
+                </div>
+                <div class="input-group">
+                    <label>Confirm Password</label>
+                    <input type="password" id="regConfirmPassword" placeholder="Confirm password" required>
+                </div>
+                <button type="submit">Sign Up</button>
+            </form>
+            <div class="divider">OR</div>
+            <button type="button" id="googleRegisterBtn" class="google-btn"><i class="fab fa-google"></i> Sign up with Google</button>
+            <div class="toggle-link">
+                Already have an account? <a href="#" id="showLogin">Log in</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- After successful authentication (dashboard preview) -->
+    <div id="afterAuthSection" style="display: none;">
+        <div class="welcome-box">
+            <div class="welcome-icon"><i class="fas fa-check-circle"></i></div>
+            <h3>Welcome back!</h3>
+            <p style="margin: 12px 0 4px;">You’re signed in to RESUME'S</p>
+            <div class="user-detail" id="userEmailSpan">user@example.com</div>
+            <div id="verifyInfo" class="verify-note">
+                <i class="fas fa-envelope"></i> Please verify your email address. Check your inbox and click the verification link.
+            </div>
+            <button id="logoutBtn" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+            <p style="margin-top: 24px; font-size: 0.75rem; color:#6c757d;">🔒 Secured with Firebase Authentication</p>
+        </div>
+    </div>
+</div>
+
+<!-- Extra inline note for Firebase config -->
+<div style="position: fixed; bottom: 16px; left: 0; right: 0; text-align: center; font-size: 12px; color: #334155; background: rgba(255,255,240,0.8); padding: 6px; border-radius: 40px; width: fit-content; margin: 0 auto; backdrop-filter: blur(4px);">
+   
+</div>
+</body>
+</html>

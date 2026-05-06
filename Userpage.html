@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Resume Builder | User Details</title>
+    <!-- Google Fonts + Font Awesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f5f7fc 0%, #e9eef4 100%);
+            color: #1a2c3e;
+            line-height: 1.5;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        /* Main App Container - Full width, no sidebar */
+        .app-wrapper {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 24px 40px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            width: 44px;
+            height: 44px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 6px 12px -6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #1e293b, #2d3a4b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .header-badge {
+            background: #eef2ff;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Form container */
+        .form-container {
+            padding: 40px 48px;
+            flex: 1;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px 36px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group.full-width {
+            grid-column: span 2;
+        }
+
+        label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #334155;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        label i {
+            color: #3b82f6;
+            width: 18px;
+            font-size: 0.9rem;
+        }
+
+        input {
+            padding: 14px 18px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: #fefefe;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+        }
+
+        .error-msg {
+            font-size: 0.7rem;
+            color: #e53e3e;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        input.error-border {
+            border-color: #f87171;
+            background-color: #fff5f5;
+        }
+
+        /* Buttons : Back + Next */
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 48px;
+            border-top: 1px solid #edf2f7;
+            padding-top: 36px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .back-btn {
+            background: #f1f5f9;
+            color: #1e293b;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 44px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .back-btn i {
+            font-size: 0.9rem;
+        }
+
+        .back-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .next-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 14px 38px;
+            border-radius: 44px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 8px 18px -8px rgba(15,23,42,0.3);
+        }
+
+        .next-btn i {
+            font-size: 0.9rem;
+        }
+
+        .next-btn:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 22px -10px rgba(15,23,42,0.4);
+        }
+
+        /* Footer */
+        .footer {
+            background: #f8fafc;
+            padding: 20px 40px;
+            text-align: center;
+            border-top: 1px solid #eef2f6;
+            font-size: 0.75rem;
+            color: #5b6e8c;
+        }
+
+        /* Progress Steps (replaces sidebar visual) */
+        .progress-steps {
+            background: #f9fafb;
+            padding: 16px 40px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .step.active {
+            color: #0f172a;
+        }
+
+        .step.active .step-number {
+            background: #0f172a;
+            color: white;
+            border-color: #0f172a;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 30px;
+            background: white;
+            border: 1.5px solid #cbd5e1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .step.completed {
+            color: #10b981;
+        }
+
+        /* Responsive */
+        @media (max-width: 780px) {
+            body {
+                padding: 16px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 22px;
+            }
+            .input-group.full-width {
+                grid-column: span 1;
+            }
+            .form-container {
+                padding: 28px 24px;
+            }
+            .header {
+                padding: 18px 24px;
+            }
+            .action-buttons {
+                flex-direction: column-reverse;
+                align-items: stretch;
+            }
+            .back-btn, .next-btn {
+                justify-content: center;
+            }
+            .progress-steps {
+                padding: 12px 24px;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .step span:not(.step-number) {
+                display: none;
+            }
+            .step-number {
+                width: 32px;
+                height: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <!-- Header Section with logo & badge (clean) -->
+    <header class="header">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <h1><i class="fas fa-id-card" style="margin-right: 8px; color: #3b82f6;"></i> User Details</h1>
+        </div>
+        <div class="header-badge">
+            <i class="fas fa-check-circle"></i> Step 1 of 2
+        </div>
+    </header>
+
+    <!-- Simple progress indicator (replaces sidebar) -->
+    <div class="progress-steps">
+        <div class="step active">
+            <span class="step-number">1</span>
+            <span>Personal Info</span>
+        </div>
+       
+    </div>
+
+    <!-- Main Form Area -->
+    <div class="form-container">
+        <form id="userForm" novalidate>
+            <div class="form-grid">
+                <!-- First Name & Surname -->
+                <div class="input-group">
+                    <label><i class="fas fa-user"></i> First Name *</label>
+                    <input type="text" id="firstName" placeholder="e.g., Raj" autocomplete="given-name">
+                    <div class="error-msg" id="firstNameError"></div>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-user-tag"></i> Surname *</label>
+                    <input type="text" id="surname" placeholder="e.g., Sharma" autocomplete="family-name">
+                    <div class="error-msg" id="surnameError"></div>
+                </div>
+
+                <!-- Profession (full width) -->
+                <div class="input-group full-width">
+                    <label><i class="fas fa-briefcase"></i> Profession / Title *</label>
+                    <input type="text" id="profession" placeholder="e.g., Frontend Developer, Product Manager">
+                    <div class="error-msg" id="professionError"></div>
+                </div>
+
+                <!-- Email & Phone -->
+                <div class="input-group">
+                    <label><i class="fas fa-envelope"></i> Email Address *</label>
+                    <input type="email" id="email" placeholder="hello@example.com" autocomplete="email">
+                    <div class="error-msg" id="emailError"></div>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-phone-alt"></i> Phone *</label>
+                    <input type="tel" id="phone" placeholder="+91 98765 43210" autocomplete="tel">
+                    <div class="error-msg" id="phoneError"></div>
+                </div>
+
+                <!-- City & Country -->
+                <div class="input-group">
+                    <label><i class="fas fa-city"></i> City *</label>
+                    <input type="text" id="city" placeholder="Mumbai">
+                    <div class="error-msg" id="cityError"></div>
+                </div>
+                <div class="input-group">
+                    <label><i class="fas fa-globe"></i> Country *</label>
+                    <input type="text" id="country" placeholder="India">
+                    <div class="error-msg" id="countryError"></div>
+                </div>
+
+                <!-- Pincode + LinkedIn -->
+                <div class="input-group">
+                    <label><i class="fas fa-map-pin"></i> PIN Code *</label>
+                    <input type="text" id="pincode" placeholder="400001" maxlength="10">
+                    <div class="error-msg" id="pincodeError"></div>
+                </div>
+                <div class="input-group">
+                    <label><i class="fab fa-linkedin"></i> LinkedIn Profile</label>
+                    <input type="url" id="linkedin" placeholder="https://linkedin.com/in/username">
+                    <div class="error-msg" id="linkedinError"></div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button type="button" id="backBtn" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Welcome
+                </button>
+                <button type="button" id="nextBtn" class="next-btn">
+                    Next: Summary <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <footer class="footer">
+        <i class="far fa-copyright"></i> 2025 Resume Builder — All fields marked * are required
+    </footer>
+</div>
+
+<script>
+    (function() {
+        // DOM elements
+        const firstName = document.getElementById('firstName');
+        const surname = document.getElementById('surname');
+        const profession = document.getElementById('profession');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const city = document.getElementById('city');
+        const country = document.getElementById('country');
+        const pincode = document.getElementById('pincode');
+        const linkedin = document.getElementById('linkedin');
+
+        // Error span elements
+        const firstNameErr = document.getElementById('firstNameError');
+        const surnameErr = document.getElementById('surnameError');
+        const professionErr = document.getElementById('professionError');
+        const emailErr = document.getElementById('emailError');
+        const phoneErr = document.getElementById('phoneError');
+        const cityErr = document.getElementById('cityError');
+        const countryErr = document.getElementById('countryError');
+        const pincodeErr = document.getElementById('pincodeError');
+        const linkedinErr = document.getElementById('linkedinError');
+
+        // Helper: remove error style & message
+        function clearError(inputElement, errorSpan) {
+            if (inputElement) inputElement.classList.remove('error-border');
+            if (errorSpan) errorSpan.innerHTML = '';
+        }
+
+        function setError(inputElement, errorSpan, message) {
+            if (inputElement) {
+                inputElement.classList.add('error-border');
+            }
+            if (errorSpan) errorSpan.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
+        }
+
+        // Validation function returns true if valid
+        function validateForm() {
+            let isValid = true;
+
+            // 1) First name
+            const fnVal = firstName.value.trim();
+            if (fnVal === '') {
+                setError(firstName, firstNameErr, 'First name is required');
+                isValid = false;
+            } else if (fnVal.length < 2) {
+                setError(firstName, firstNameErr, 'At least 2 characters');
+                isValid = false;
+            } else {
+                clearError(firstName, firstNameErr);
+            }
+
+            // 2) Surname
+            const snVal = surname.value.trim();
+            if (snVal === '') {
+                setError(surname, surnameErr, 'Surname is required');
+                isValid = false;
+            } else if (snVal.length < 2) {
+                setError(surname, surnameErr, 'Enter valid surname');
+                isValid = false;
+            } else {
+                clearError(surname, surnameErr);
+            }
+
+            // 3) Profession
+            const profVal = profession.value.trim();
+            if (profVal === '') {
+                setError(profession, professionErr, 'Profession is required');
+                isValid = false;
+            } else if (profVal.length < 2) {
+                setError(profession, professionErr, 'Enter a valid profession');
+                isValid = false;
+            } else {
+                clearError(profession, professionErr);
+            }
+
+            // 4) Email (required + regex)
+            const emailVal = email.value.trim();
+            const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
+            if (emailVal === '') {
+                setError(email, emailErr, 'Email address is required');
+                isValid = false;
+            } else if (!emailRegex.test(emailVal)) {
+                setError(email, emailErr, 'Enter a valid email (e.g., name@domain.com)');
+                isValid = false;
+            } else {
+                clearError(email, emailErr);
+            }
+
+            // 5) Phone (non-empty, basic digits/+/space allowed — at least 6 digits)
+            const phoneVal = phone.value.trim();
+            const phoneDigits = phoneVal.replace(/[^\d+]/g, '');
+            if (phoneVal === '') {
+                setError(phone, phoneErr, 'Phone number is required');
+                isValid = false;
+            } else if (phoneDigits.length < 6 || phoneDigits.length > 15) {
+                setError(phone, phoneErr, 'Phone must have 6-15 digits (numbers only)');
+                isValid = false;
+            } else {
+                clearError(phone, phoneErr);
+            }
+
+            // 6) City
+            const cityVal = city.value.trim();
+            if (cityVal === '') {
+                setError(city, cityErr, 'City is required');
+                isValid = false;
+            } else {
+                clearError(city, cityErr);
+            }
+
+            // 7) Country
+            const countryVal = country.value.trim();
+            if (countryVal === '') {
+                setError(country, countryErr, 'Country is required');
+                isValid = false;
+            } else {
+                clearError(country, countryErr);
+            }
+
+            // 8) PIN code (required, numeric length 4-10)
+            const pinVal = pincode.value.trim();
+            const pinRegex = /^[0-9]{4,10}$/;
+            if (pinVal === '') {
+                setError(pincode, pincodeErr, 'PIN code is required');
+                isValid = false;
+            } else if (!pinRegex.test(pinVal)) {
+                setError(pincode, pincodeErr, 'PIN code must contain 4-10 digits only');
+                isValid = false;
+            } else {
+                clearError(pincode, pincodeErr);
+            }
+
+            // 9) LinkedIn: optional, but if provided must be valid URL format
+            const linkedinVal = linkedin.value.trim();
+            if (linkedinVal !== '') {
+                const urlPattern = /^(https?:\/\/)/i;
+                if (!urlPattern.test(linkedinVal)) {
+                    setError(linkedin, linkedinErr, 'LinkedIn URL should start with http:// or https://');
+                    isValid = false;
+                } else if (!linkedinVal.includes('linkedin.com')) {
+                    setError(linkedin, linkedinErr, 'Please enter a valid LinkedIn profile URL');
+                    isValid = false;
+                } else {
+                    clearError(linkedin, linkedinErr);
+                }
+            } else {
+                clearError(linkedin, linkedinErr);
+            }
+
+            return isValid;
+        }
+
+        // Save data to localStorage
+        function saveFormDataToLocal() {
+            const formData = {
+                firstName: firstName.value.trim(),
+                surname: surname.value.trim(),
+                profession: profession.value.trim(),
+                email: email.value.trim(),
+                phone: phone.value.trim(),
+                city: city.value.trim(),
+                country: country.value.trim(),
+                pincode: pincode.value.trim(),
+                linkedin: linkedin.value.trim(),
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('resumeUserData', JSON.stringify(formData));
+        }
+
+        // Redirect to summary.html
+        function goToSummaryPage() {
+            if (validateForm()) {
+                saveFormDataToLocal();
+               window.location.href = '/summary';
+            } else {
+                const firstErrorField = document.querySelector('.error-border');
+                if (firstErrorField) {
+                    firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn) {
+                    nextBtn.style.transform = 'translateX(4px)';
+                    setTimeout(() => { if(nextBtn) nextBtn.style.transform = ''; }, 200);
+                }
+            }
+        }
+
+        // Back button: navigate to welcomepage.html
+        function goToWelcomePage() {
+            // Save draft before leaving so data is not lost
+            const draftData = {
+                firstName: firstName.value.trim(),
+                surname: surname.value.trim(),
+                profession: profession.value.trim(),
+                email: email.value.trim(),
+                phone: phone.value.trim(),
+                city: city.value.trim(),
+                country: country.value.trim(),
+                pincode: pincode.value.trim(),
+                linkedin: linkedin.value.trim(),
+                timestamp: new Date().getTime()
+            };
+            localStorage.setItem('resumeUserDraft', JSON.stringify(draftData));
+            window.location.href = '/';
+        }
+
+        // Live validation blur handler
+        function attachBlurValidation() {
+            const fields = [
+                { input: firstName, error: firstNameErr, validate: () => {
+                    const val = firstName.value.trim();
+                    if (val === '') return 'First name required';
+                    if (val.length < 2) return 'Minimum 2 chars';
+                    return '';
+                } },
+                { input: surname, error: surnameErr, validate: () => {
+                    const val = surname.value.trim();
+                    if (val === '') return 'Surname required';
+                    if (val.length < 2) return 'Minimum 2 chars';
+                    return '';
+                } },
+                { input: profession, error: professionErr, validate: () => {
+                    if (profession.value.trim() === '') return 'Profession required';
+                    return '';
+                } },
+                { input: email, error: emailErr, validate: () => {
+                    const val = email.value.trim();
+                    if (val === '') return 'Email required';
+                    if (!/^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(val)) return 'Invalid email format';
+                    return '';
+                } },
+                { input: phone, error: phoneErr, validate: () => {
+                    const val = phone.value.trim();
+                    if (val === '') return 'Phone required';
+                    const digits = val.replace(/[^\d+]/g, '');
+                    if (digits.length < 6 || digits.length > 15) return 'Phone: 6-15 digits';
+                    return '';
+                } },
+                { input: city, error: cityErr, validate: () => city.value.trim() === '' ? 'City required' : '' },
+                { input: country, error: countryErr, validate: () => country.value.trim() === '' ? 'Country required' : '' },
+                { input: pincode, error: pincodeErr, validate: () => {
+                    const val = pincode.value.trim();
+                    if (val === '') return 'PIN code required';
+                    if (!/^[0-9]{4,10}$/.test(val)) return 'Only digits 4-10';
+                    return '';
+                } },
+                { input: linkedin, error: linkedinErr, validate: () => {
+                    const val = linkedin.value.trim();
+                    if (val === '') return '';
+                    if (!/^https?:\/\//i.test(val)) return 'URL must start with http:// or https://';
+                    if (!val.includes('linkedin.com')) return 'Valid LinkedIn URL required';
+                    return '';
+                } }
+            ];
+            fields.forEach(field => {
+                if (!field.input) return;
+                field.input.addEventListener('blur', () => {
+                    const errMsg = field.validate();
+                    if (errMsg) {
+                        setError(field.input, field.error, errMsg);
+                    } else {
+                        clearError(field.input, field.error);
+                    }
+                });
+                field.input.addEventListener('input', () => {
+                    const errMsg = field.validate();
+                    if (errMsg === '' && field.error && field.error.innerHTML !== '') {
+                        clearError(field.input, field.error);
+                    } else if (errMsg !== '' && field.input.classList.contains('error-border')) {
+                        const nowValid = (field.validate() === '');
+                        if (nowValid) clearError(field.input, field.error);
+                    }
+                });
+            });
+        }
+
+        function trimInputs() {
+            const allInputs = [firstName, surname, profession, email, phone, city, country, pincode, linkedin];
+            allInputs.forEach(inp => {
+                if (inp && inp.value) inp.value = inp.value.trim();
+            });
+        }
+
+        // Restore from saved data or draft
+        function restoreData() {
+            // First check full resume data
+            const savedData = localStorage.getItem('resumeUserData');
+            if (savedData) {
+                try {
+                    const data = JSON.parse(savedData);
+                    if (data.firstName) firstName.value = data.firstName;
+                    if (data.surname) surname.value = data.surname;
+                    if (data.profession) profession.value = data.profession;
+                    if (data.email) email.value = data.email;
+                    if (data.phone) phone.value = data.phone;
+                    if (data.city) city.value = data.city;
+                    if (data.country) country.value = data.country;
+                    if (data.pincode) pincode.value = data.pincode;
+                    if (data.linkedin) linkedin.value = data.linkedin;
+                    return;
+                } catch(e) {}
+            }
+            // else try draft
+            const draftData = localStorage.getItem('resumeUserDraft');
+            if (draftData) {
+                try {
+                    const draft = JSON.parse(draftData);
+                    if (draft.firstName) firstName.value = draft.firstName;
+                    if (draft.surname) surname.value = draft.surname;
+                    if (draft.profession) profession.value = draft.profession;
+                    if (draft.email) email.value = draft.email;
+                    if (draft.phone) phone.value = draft.phone;
+                    if (draft.city) city.value = draft.city;
+                    if (draft.country) country.value = draft.country;
+                    if (draft.pincode) pincode.value = draft.pincode;
+                    if (draft.linkedin) linkedin.value = draft.linkedin;
+                } catch(e) {}
+            }
+        }
+
+        // Event listeners
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                trimInputs();
+                goToSummaryPage();
+            });
+        }
+
+        const backBtn = document.getElementById('backBtn');
+        if (backBtn) {
+            backBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const draftSnapshot = {
+                    firstName: firstName.value.trim(),
+                    surname: surname.value.trim(),
+                    profession: profession.value.trim(),
+                    email: email.value.trim(),
+                    phone: phone.value.trim(),
+                    city: city.value.trim(),
+                    country: country.value.trim(),
+                    pincode: pincode.value.trim(),
+                    linkedin: linkedin.value.trim(),
+                };
+                localStorage.setItem('resumeUserDraft', JSON.stringify(draftSnapshot));
+                window.location.href = '/';
+            });
+        }
+
+        attachBlurValidation();
+        restoreData();
+
+        // Enter key triggers next if valid
+        document.getElementById('userForm')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                trimInputs();
+                goToSummaryPage();
+            }
+        });
+    })();
+</script>
+</body>
+</html>

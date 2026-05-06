@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Choose Template | Resume Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 12px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-section p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+            margin-bottom: 48px;
+        }
+
+        .template-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            border: 3px solid transparent;
+        }
+
+        .template-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.25);
+        }
+
+        .template-card.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+        }
+
+        .template-preview {
+            height: 280px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            position: relative;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .template-icon {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+
+        .template-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .template-desc {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .template-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #3b82f6;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .preview-section {
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            margin-top: 32px;
+        }
+
+        .preview-header {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 20px 32px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .preview-header h3 {
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-btn {
+            background: #10b981;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+        }
+
+        .download-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .resume-container {
+            background: #f1f5f9;
+            padding: 48px;
+            overflow-x: auto;
+            display: flex;
+            justify-content: center;
+        }
+
+        .resume-preview {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        /* FIX: Text wrap for all content - Ye important hai */
+        .resume-preview p,
+        .resume-preview .project-item p,
+        .resume-preview .job-item p,
+        .resume-preview .edu-item p,
+        .resume-preview .cert-item p,
+        .resume-preview .section p {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+        }
+
+        .project-item,
+        .job-item,
+        .edu-item,
+        .cert-item {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        /* Template Styles */
+        .template-classic .resume-header {
+            text-align: center;
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+        .template-classic .resume-header h1 { font-size: 2rem; color: #0f172a; }
+        .template-classic .section { margin-bottom: 24px; }
+        .template-classic .section-title { font-size: 1.2rem; font-weight: 700; color: #3b82f6; border-bottom: 2px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; }
+
+        .template-modern .resume-header { background: #0f172a; color: white; padding: 30px; margin: -48px -48px 30px -48px; border-radius: 0 0 30px 30px; }
+        .template-modern .section-title { font-size: 1.1rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
+
+        .template-minimal .resume-header { margin-bottom: 24px; }
+        .template-minimal .section-title { font-size: 1rem; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+
+        .template-creative .resume-header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 30px; margin: -48px -48px 30px -48px; border-radius: 20px; }
+        .template-creative .section-title { font-size: 1.2rem; font-weight: 700; color: #667eea; border-left: 4px solid #667eea; padding-left: 12px; }
+
+        .template-corporate { border: 1px solid #e2e8f0; padding: 40px; }
+        .template-corporate .resume-header { text-align: center; }
+        .template-corporate .section-title { background: #f1f5f9; padding: 8px 12px; font-weight: 700; margin-bottom: 16px; }
+
+        .template-tech .resume-header { background: #0f172a; color: white; padding: 25px; margin-bottom: 25px; border-radius: 12px; }
+        .template-tech .section-title { font-family: monospace; font-size: 1.1rem; font-weight: 700; color: #3b82f6; }
+
+        .template-elegant { font-family: Georgia, serif; }
+        .template-elegant .resume-header { text-align: center; border-bottom: 1px solid #cbd5e1; padding-bottom: 20px; }
+        .template-elegant .section-title { font-size: 1.1rem; font-weight: normal; font-style: italic; color: #475569; }
+
+        .template-two-column .resume-content { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        .template-two-column .sidebar { background: #f1f5f9; padding: 20px; border-radius: 12px; }
+
+        .template-dark-elegant { background: #1e293b; color: #e2e8f0; padding: 40px; border-radius: 16px; }
+        .template-dark-elegant .resume-header { border-bottom: 2px solid #3b82f6; }
+        .template-dark-elegant .section-title { color: #3b82f6; }
+
+        .template-compact { font-size: 0.9rem; }
+        .template-compact .section { margin-bottom: 16px; }
+        .template-compact .section-title { font-size: 1rem; font-weight: 700; display: inline-block; border-bottom: 2px solid #3b82f6; }
+
+        .section { margin-bottom: 20px; }
+        .section-title { margin-bottom: 12px; }
+        .job-item, .edu-item, .cert-item, .project-item { margin-bottom: 16px; }
+        .job-title, .edu-degree, .project-name { font-weight: 700; color: #0f172a; }
+        .skill-tag-inline { display: inline-block; background: #e2e8f0; padding: 4px 12px; border-radius: 20px; margin: 4px; font-size: 0.85rem; }
+        .tech-tag-inline { display: inline-block; background: #e0e7ff; color: #1e40af; padding: 2px 10px; border-radius: 20px; margin: 3px; font-size: 0.75rem; }
+
+        .back-nav {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateX(-4px);
+        }
+
+        @media print {
+            body { background: white; padding: 0; margin: 0; }
+            .back-nav, .template-grid, .preview-header, .template-card, .preview-section > .preview-header,
+            .header-section, .download-btn, .back-btn, .container > .back-nav { display: none !important; }
+            @page { margin: 0; size: A4; }
+            .preview-section { box-shadow: none; margin: 0; padding: 0; background: white; display: block !important; }
+            .resume-container { padding: 0; background: white; margin: 0; }
+            .resume-preview { box-shadow: none; margin: 0 auto; width: 100%; max-width: 100%; padding: 20px; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .template-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+            .resume-container { padding: 24px; }
+            .template-two-column .resume-content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="back-nav">
+        <button class="back-btn" onclick="window.location.href='/project'">
+            <i class="fas fa-arrow-left"></i> Back to project
+        </button>
+    </div>
+    <div class="header-section">
+        <h1><i class="fas fa-layer-group"></i> Choose Your Resume Template</h1>
+        <p>Select a professional template that fits your style</p>
+    </div>
+
+    <div class="template-grid" id="templateGrid"></div>
+
+    <div class="preview-section" id="previewSection" style="display: none;">
+        <div class="preview-header">
+            <h3><i class="fas fa-eye"></i> Resume Preview</h3>
+            <button class="download-btn" id="downloadBtn">
+                <i class="fas fa-download"></i> Download PDF
+            </button>
+        </div>
+        <div class="resume-container">
+            <div id="resumePreview" class="resume-preview"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let userData = null;
+    let workExperiences = [];
+    let educations = [];
+    let skills = [];
+    let certifications = [];
+    let projects = [];
+    let profilePhoto = null;
+    let selectedTemplate = 'classic';
+
+    const templates = [
+        { id: 'classic', name: 'Classic Professional', icon: 'fa-file-alt', desc: 'Traditional & Elegant' },
+        { id: 'modern', name: 'Modern Clean', icon: 'fa-microsoft', desc: 'Sleek & Contemporary' },
+        { id: 'minimal', name: 'Minimalist', icon: 'fa-grip-lines', desc: 'Simple & Focused' },
+        { id: 'creative', name: 'Creative Edge', icon: 'fa-palette', desc: 'Bold & Artistic' },
+        { id: 'corporate', name: 'Corporate Elite', icon: 'fa-building', desc: 'Executive Style' },
+        { id: 'tech', name: 'Tech Innovator', icon: 'fa-microchip', desc: 'Modern Developer' },
+        { id: 'elegant', name: 'Elegant Serif', icon: 'fa-feather-alt', desc: 'Sophisticated' },
+        { id: 'two-column', name: 'Two Column', icon: 'fa-columns', desc: 'Space Optimized' },
+        { id: 'dark-elegant', name: 'Dark Elegant', icon: 'fa-moon', desc: 'Premium Dark' },
+        { id: 'compact', name: 'Compact Smart', icon: 'fa-compress-alt', desc: 'Space Saving' }
+    ];
+
+    function loadAllData() {
+        const storedUser = localStorage.getItem('resumeUserData');
+        if (storedUser) {
+            userData = JSON.parse(storedUser);
+        } else {
+            const draft = localStorage.getItem('resumeUserDraft');
+            if (draft) {
+                userData = JSON.parse(draft);
+            } else {
+                userData = { firstName: 'John', surname: 'Doe', profession: 'Professional', email: '', phone: '', city: '', country: '' };
+            }
+        }
+
+        const storedWork = localStorage.getItem('workExperiences');
+        if (storedWork) {
+            const allWork = JSON.parse(storedWork);
+            workExperiences = allWork.filter(exp => {
+                return exp.jobTitle && exp.jobTitle.trim() !== '' && 
+                       exp.company && exp.company.trim() !== '';
+            });
+        } else {
+            workExperiences = [];
+        }
+
+        const storedEdu = localStorage.getItem('userEducation');
+        if (storedEdu) {
+            const allEdu = JSON.parse(storedEdu);
+            educations = allEdu.filter(edu => {
+                return edu.degree && edu.degree.trim() !== '' && 
+                       edu.institution && edu.institution.trim() !== '';
+            });
+        } else {
+            educations = [];
+        }
+
+        const storedSkills = localStorage.getItem('userSkills');
+        if (storedSkills) {
+            skills = JSON.parse(storedSkills);
+            if (!Array.isArray(skills)) skills = [];
+        } else {
+            skills = [];
+        }
+
+        const storedCert = localStorage.getItem('userCertifications');
+        if (storedCert) {
+            const allCerts = JSON.parse(storedCert);
+            certifications = allCerts.filter(cert => {
+                return cert.name && cert.name.trim() !== '';
+            });
+        } else {
+            certifications = [];
+        }
+
+        const storedProjects = localStorage.getItem('userProjects');
+        if (storedProjects) {
+            const allProjects = JSON.parse(storedProjects);
+            projects = allProjects.filter(proj => {
+                return proj.name && proj.name.trim() !== '' && proj.description && proj.description.trim() !== '';
+            });
+        } else {
+            projects = [];
+        }
+
+        const storedPhoto = localStorage.getItem('profilePhotoBase64');
+        if (storedPhoto && storedPhoto !== 'null') {
+            profilePhoto = storedPhoto;
+        }
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function formatDateRange(startDate, endDate, isCurrent) {
+        if (!startDate && !endDate && !isCurrent) return '';
+        const start = startDate || '';
+        const end = isCurrent ? 'Present' : (endDate || '');
+        if (!start && !end) return '';
+        return `${start} - ${end}`;
+    }
+
+    function renderTechnologies(technologies) {
+        if (!technologies || !Array.isArray(technologies) || technologies.length === 0) return '';
+        return `<div style="margin-top: 5px;">${technologies.map(tech => `<span class="tech-tag-inline">${escapeHtml(tech)}</span>`).join('')}</div>`;
+    }
+
+    function renderResume() {
+        const summary = localStorage.getItem('professionalSummaryText') || '';
+        const container = document.getElementById('resumePreview');
+        if (!container) return;
+
+        const fullName = `${userData?.firstName || ''} ${userData?.surname || ''}`.trim() || 'Your Name';
+        const profession = userData?.profession || 'Professional';
+        const email = userData?.email || '';
+        const phone = userData?.phone || '';
+        const location = `${userData?.city || ''} ${userData?.country || ''}`.trim();
+        
+        const hasPhoto = profilePhoto && profilePhoto !== 'null';
+        const hasAnyData = fullName !== 'Your Name' || profession !== 'Professional' || email || phone || location || skills.length > 0 || workExperiences.length > 0 || educations.length > 0 || certifications.length > 0 || projects.length > 0 || summary;
+
+        if (!hasAnyData) {
+            container.innerHTML = `<div style="text-align: center; padding: 60px; color: #64748b;">
+                <i class="fas fa-info-circle" style="font-size: 3rem; margin-bottom: 16px;"></i>
+                <h3>No Data Found</h3>
+                <p>Please fill your details first.</p>
+            </div>`;
+            return;
+        }
+
+        let resumeHtml = `<div class="template-${selectedTemplate}" style="padding: 48px;">`;
+        
+        if (selectedTemplate === 'two-column') {
+            resumeHtml += `
+                <div class="resume-content">
+                    <div class="sidebar">
+                        ${hasPhoto ? `<div style="text-align: center; margin-bottom: 20px;"><img src="${profilePhoto}" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;"></div>` : ''}
+                        
+                        <div class="section"><div class="section-title">Contact</div>
+                        ${email ? `<p><i class="fas fa-envelope"></i> ${escapeHtml(email)}</p>` : ''}
+                        ${phone ? `<p><i class="fas fa-phone"></i> ${escapeHtml(phone)}</p>` : ''}
+                        ${location ? `<p><i class="fas fa-map-marker-alt"></i> ${escapeHtml(location)}</p>` : ''}
+                        </div>
+
+                        ${skills.length > 0 ? `<div class="section"><div class="section-title">Skills</div>
+                        <div>${skills.map(s => `<span class="skill-tag-inline">${escapeHtml(s)}</span>`).join('')}</div></div>` : ''}
+                        
+                        ${certifications.length > 0 ? `<div class="section"><div class="section-title">Certifications</div>
+                        ${certifications.map(cert => `
+                            <div class="cert-item">
+                                <div><strong>${escapeHtml(cert.name)}</strong></div>
+                                ${cert.issuer ? `<div style="font-size: 0.8rem; color: #64748b;">${escapeHtml(cert.issuer)}</div>` : ''}
+                                ${cert.issueDate ? `<div style="font-size: 0.8rem; color: #64748b;">${escapeHtml(cert.issueDate)}</div>` : ''}
+                                ${cert.description ? `<p style="font-size: 0.85rem; margin-top: 4px;">${escapeHtml(cert.description)}</p>` : ''}
+                            </div>`).join('')}
+                        </div>` : ''}
+                    </div>
+
+                    <div class="main-content">
+                        <div style="margin-bottom: 24px;">
+                            <h1>${escapeHtml(fullName)}</h1>
+                            <p style="color: #3b82f6; font-weight: 500;">${escapeHtml(profession)}</p>
+                        </div>
+
+                        ${summary ? `<div class="section">
+                            <div class="section-title">Professional Summary</div>
+                            <p>${escapeHtml(summary)}</p>
+                        </div>` : ''}
+
+                        ${workExperiences.length > 0 ? `<div class="section"><div class="section-title">Work Experience</div>
+                        ${workExperiences.map(exp => `
+                            <div class="job-item">
+                                <div class="job-title">${escapeHtml(exp.jobTitle)}</div>
+                                <div style="color: #3b82f6; font-weight: 500;">${escapeHtml(exp.company)}</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">${formatDateRange(exp.startDate, exp.endDate, exp.currentlyWorking)}</div>
+                                ${exp.description ? `<p style="margin-top: 6px;">${escapeHtml(exp.description)}</p>` : ''}
+                            </div>`).join('')}
+                        </div>` : ''}
+
+                        ${educations.length > 0 ? `<div class="section"><div class="section-title">Education</div>
+                        ${educations.map(edu => `
+                            <div class="edu-item">
+                                <div class="edu-degree">${escapeHtml(edu.degree)}</div>
+                                <div style="font-weight: 500;">${escapeHtml(edu.institution)}</div>
+                                <div style="font-size: 0.8rem; color: #64748b;">${formatDateRange(edu.startYear, edu.endYear, edu.currentlyStudying)}</div>
+                                ${edu.description ? `<p style="margin-top: 6px;">${escapeHtml(edu.description)}</p>` : ''}
+                            </div>`).join('')}
+                        </div>` : ''}
+
+                        ${projects.length > 0 ? `<div class="section"><div class="section-title">Projects</div>
+                        ${projects.map(proj => `
+                            <div class="project-item">
+                                <div class="project-name">${escapeHtml(proj.name)}</div>
+                                ${proj.role ? `<div style="font-size: 0.85rem; color: #3b82f6;">Role: ${escapeHtml(proj.role)}</div>` : ''}
+                                ${renderTechnologies(proj.technologies)}
+                                <div style="font-size: 0.8rem; color: #64748b;">${formatDateRange(proj.startDate, proj.endDate, false)}</div>
+                                ${proj.description ? `<p style="margin-top: 6px;">${escapeHtml(proj.description)}</p>` : ''}
+                                ${proj.githubLink ? `<div style="margin-top: 5px;"><a href="${escapeHtml(proj.githubLink)}" target="_blank" style="font-size: 0.8rem; color: #3b82f6; text-decoration: none;"><i class="fab fa-github"></i> GitHub</a></div>` : ''}
+                                ${proj.liveLink ? `<div><a href="${escapeHtml(proj.liveLink)}" target="_blank" style="font-size: 0.8rem; color: #3b82f6; text-decoration: none;"><i class="fas fa-external-link-alt"></i> Live Demo</a></div>` : ''}
+                            </div>`).join('')}
+                        </div>` : ''}
+                    </div>
+                </div>
+            `;
+        } else {
+            resumeHtml += `
+                <div class="resume-header">
+                    ${hasPhoto ? `<div style="text-align: center; margin-bottom: 16px;"><img src="${profilePhoto}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"></div>` : ''}
+                    <h1>${escapeHtml(fullName)}</h1>
+                    <p style="color: #3b82f6; font-weight: 500;">${escapeHtml(profession)}</p>
+                    <div style="font-size: 0.9rem; margin-top: 8px; color: #64748b;">
+                        ${email ? `<span>${escapeHtml(email)}</span> | ` : ''}
+                        ${phone ? `<span>${escapeHtml(phone)}</span> | ` : ''}
+                        ${location ? `<span>${escapeHtml(location)}</span>` : ''}
+                    </div>
+                </div>
+
+                ${summary ? `<div class="section">
+                    <div class="section-title">Professional Summary</div>
+                    <p>${escapeHtml(summary)}</p>
+                </div>` : ''}
+
+                ${skills.length > 0 ? `<div class="section"><div class="section-title">Core Skills</div>
+                <div>${skills.map(s => `<span class="skill-tag-inline">${escapeHtml(s)}</span>`).join('')}</div></div>` : ''}
+
+                ${workExperiences.length > 0 ? `<div class="section"><div class="section-title">Work Experience</div>
+                ${workExperiences.map(exp => `
+                    <div class="job-item">
+                        <div class="job-title">${escapeHtml(exp.jobTitle)}</div>
+                        <div style="font-weight: 500;">${escapeHtml(exp.company)}</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">${formatDateRange(exp.startDate, exp.endDate, exp.currentlyWorking)}</div>
+                        ${exp.description ? `<p style="margin-top: 6px;">${escapeHtml(exp.description)}</p>` : ''}
+                    </div>`).join('')}
+                </div>` : ''}
+
+                ${educations.length > 0 ? `<div class="section"><div class="section-title">Education</div>
+                ${educations.map(edu => `
+                    <div class="edu-item">
+                        <div class="edu-degree">${escapeHtml(edu.degree)}</div>
+                        <div style="font-weight: 500;">${escapeHtml(edu.institution)}</div>
+                        <div style="font-size: 0.8rem; color: #64748b;">${formatDateRange(edu.startYear, edu.endYear, edu.currentlyStudying)}</div>
+                        ${edu.description ? `<p style="margin-top: 6px;">${escapeHtml(edu.description)}</p>` : ''}
+                    </div>`).join('')}
+                </div>` : ''}
+
+                ${projects.length > 0 ? `<div class="section"><div class="section-title">Projects</div>
+                ${projects.map(proj => `
+                    <div class="project-item">
+                        <div class="project-name">${escapeHtml(proj.name)}</div>
+                        ${proj.role ? `<div style="font-size: 0.85rem; color: #3b82f6;">${escapeHtml(proj.role)}</div>` : ''}
+                        ${renderTechnologies(proj.technologies)}
+                        <div style="font-size: 0.8rem; color: #64748b;">${formatDateRange(proj.startDate, proj.endDate, false)}</div>
+                        ${proj.description ? `<p style="margin-top: 6px;">${escapeHtml(proj.description)}</p>` : ''}
+                        ${proj.githubLink ? `<div style="margin-top: 5px;"><a href="${escapeHtml(proj.githubLink)}" target="_blank" style="font-size: 0.8rem; color: #3b82f6; text-decoration: none;"><i class="fab fa-github"></i> GitHub</a></div>` : ''}
+                        ${proj.liveLink ? `<div><a href="${escapeHtml(proj.liveLink)}" target="_blank" style="font-size: 0.8rem; color: #3b82f6; text-decoration: none;"><i class="fas fa-external-link-alt"></i> Live Demo</a></div>` : ''}
+                    </div>`).join('')}
+                </div>` : ''}
+
+                ${certifications.length > 0 ? `<div class="section"><div class="section-title">Certifications</div>
+                ${certifications.map(cert => `
+                    <div class="cert-item">
+                        <strong>${escapeHtml(cert.name)}</strong>
+                        ${cert.issuer ? `<div style="font-size: 0.8rem; color: #64748b;">${escapeHtml(cert.issuer)}</div>` : ''}
+                        ${cert.issueDate ? `<div style="font-size: 0.8rem; color: #64748b;">${escapeHtml(cert.issueDate)}</div>` : ''}
+                        ${cert.description ? `<p style="margin-top: 4px;">${escapeHtml(cert.description)}</p>` : ''}
+                    </div>`).join('')}
+                </div>` : ''}
+            `;
+        }
+
+        resumeHtml += `</div>`;
+        container.innerHTML = resumeHtml;
+    }
+
+    function generateTemplateGrid() {
+        const grid = document.getElementById('templateGrid');
+        grid.innerHTML = templates.map(tpl => `
+            <div class="template-card ${selectedTemplate === tpl.id ? 'selected' : ''}" onclick="selectTemplate('${tpl.id}')">
+                <div class="template-preview">
+                    <div class="template-icon"><i class="fas ${tpl.icon}"></i></div>
+                    <div class="template-name">${tpl.name}</div>
+                    <div class="template-desc">${tpl.desc}</div>
+                    <div class="template-badge">${tpl.id === selectedTemplate ? 'Selected' : 'Choose'}</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function selectTemplate(templateId) {
+        selectedTemplate = templateId;
+        generateTemplateGrid();
+        renderResume();
+        const previewSection = document.getElementById('previewSection');
+        previewSection.style.display = 'block';
+        setTimeout(() => {
+            previewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+    }
+
+    function downloadPDF() {
+        const originalTitle = document.title;
+        document.title = `${userData?.firstName || 'Resume'}_${userData?.surname || 'Resume'}`;
+        window.print();
+        document.title = originalTitle;
+    }
+
+    loadAllData();
+    generateTemplateGrid();
+    
+    if (skills.length > 0 || workExperiences.length > 0 || educations.length > 0) {
+        selectTemplate('classic');
+    }
+
+    document.getElementById('downloadBtn')?.addEventListener('click', downloadPDF);
+    window.selectTemplate = selectTemplate;
+</script>
+</body>
+</html>

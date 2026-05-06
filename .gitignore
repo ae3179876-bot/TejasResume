@@ -1,0 +1,28 @@
+# Virtual Environment
+venv/
+env/
+
+# Environment variables (IMPORTANT - secrets)
+.env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# Node modules (agar future me React use kare)
+node_modules/
+
+# Build files (future use)
+dist/
+build/

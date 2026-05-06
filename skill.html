@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Skills | Resume Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 24px;
+            position: relative;
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 12px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-section p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .user-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 32px 48px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-info h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .user-info .profession {
+            color: #94a3b8;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-icon {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .content-wrapper {
+            padding: 48px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #3b82f6;
+            padding-left: 18px;
+        }
+
+        .section-title i {
+            color: #3b82f6;
+        }
+
+        /* Skills Input Section */
+        .skills-input-area {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .input-with-button {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .skill-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 60px;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .skill-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .add-skill-btn {
+            background: #0f172a;
+            color: white;
+            border: none;
+            padding: 0 28px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .add-skill-btn:hover {
+            background: #1e293b;
+            transform: translateY(-2px);
+        }
+
+        .skills-tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 16px;
+            min-height: 80px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+            color: #1e40af;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            cursor: default;
+        }
+
+        .skill-tag i {
+            cursor: pointer;
+            color: #ef4444;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .skill-tag i:hover {
+            transform: scale(1.2);
+            color: #dc2626;
+        }
+
+        .skill-tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+
+        .error-text {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 8px;
+            display: none;
+        }
+
+        .empty-skills {
+            color: #94a3b8;
+            font-style: italic;
+            padding: 16px 0;
+        }
+
+        /* Proficiency Level */
+        .proficiency-section {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 32px;
+            margin-top: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .proficiency-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .proficiency-bars {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .proficiency-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .proficiency-label {
+            width: 140px;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        .proficiency-slider {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 10px;
+            background: #e2e8f0;
+            -webkit-appearance: none;
+        }
+
+        input[type="range"]:focus {
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .proficiency-value {
+            width: 50px;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 2px solid #e2e8f0;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn.back {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .nav-btn.back:hover {
+            background: #e2e8f0;
+            transform: translateX(-5px);
+        }
+
+        .nav-btn.next {
+            background: #0f172a;
+            color: white;
+        }
+
+        .nav-btn.next:hover {
+            background: #1e293b;
+            transform: translateX(5px);
+            box-shadow: 0 8px 16px -6px rgba(0,0,0,0.2);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .header-section h1 { font-size: 1.8rem; }
+            .user-banner { padding: 24px; flex-direction: column; text-align: center; }
+            .content-wrapper { padding: 24px; }
+            .bottom-nav { flex-direction: column; }
+            .nav-btn { width: 100%; justify-content: center; }
+            .proficiency-item { flex-direction: column; align-items: flex-start; }
+            .proficiency-label { width: auto; }
+        }
+    </style>
+</head>
+<body>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="container">
+    <div class="header-section">
+        <h1><i class="fas fa-code"></i> Skills & Expertise</h1>
+        <p>Showcase your technical and professional skills</p>
+    </div>
+
+    <div class="main-card">
+        <div class="user-banner" id="userBanner">
+            <div class="user-info">
+                <h2 id="userName">Loading...</h2>
+                <div class="profession">
+                    <i class="fas fa-brain"></i>
+                    <span id="userProfession">-</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="section-title">
+                <i class="fas fa-star-of-life"></i>
+                <span>Your Skill Set</span>
+            </div>
+
+            <div class="skills-input-area">
+                <div class="input-with-button">
+                    <input type="text" id="skillInput" class="skill-input" placeholder="e.g., JavaScript, Project Management, UI/UX Design, Python..." autocomplete="off">
+                    <button class="add-skill-btn" onclick="addSkill()">
+                        <i class="fas fa-plus"></i> Add Skill
+                    </button>
+                </div>
+                <div id="skillsContainer" class="skills-tag-container">
+                    <!-- Dynamic skill tags appear here -->
+                </div>
+                <div id="skillError" class="error-text">Please add at least one skill</div>
+            </div>
+
+            <!-- Proficiency / Self-assessment (Optional but nice) -->
+            <div class="proficiency-section">
+                <div class="proficiency-title">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Overall Skill Confidence (Optional)</span>
+                </div>
+                <div class="proficiency-bars">
+                    <div class="proficiency-item">
+                        <span class="proficiency-label">Technical / Core Skills</span>
+                        <input type="range" id="techProficiency" class="proficiency-slider" min="0" max="100" value="75">
+                        <span id="techValue" class="proficiency-value">75%</span>
+                    </div>
+                    <div class="proficiency-item">
+                        <span class="proficiency-label">Soft Skills</span>
+                        <input type="range" id="softProficiency" class="proficiency-slider" min="0" max="100" value="80">
+                        <span id="softValue" class="proficiency-value">80%</span>
+                    </div>
+                    <div class="proficiency-item">
+                        <span class="proficiency-label">Leadership & Management</span>
+                        <input type="range" id="leadProficiency" class="proficiency-slider" min="0" max="100" value="70">
+                        <span id="leadValue" class="proficiency-value">70%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <button class="nav-btn back" onclick="goToEducationPage()">
+                    <i class="fas fa-chevron-left"></i> Back to Education
+                </button>
+                <button class="nav-btn next" onclick="validateAndProceed()">
+                    Next: Certifications <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">
+    <i class="fas fa-check-circle"></i>
+    <span>Message</span>
+</div>
+
+<script>
+    let userData = null;
+    let skillsList = []; // array of skill strings
+
+    // Cursor effect
+    const cursor = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+
+    function loadUserData() {
+        const storedData = localStorage.getItem('resumeUserData');
+        if (storedData) {
+            userData = JSON.parse(storedData);
+        } else {
+            const draftData = localStorage.getItem('resumeUserDraft');
+            if (draftData) {
+                userData = JSON.parse(draftData);
+            } else {
+                userData = { firstName: "Alex", surname: "Johnson", profession: "Professional" };
+            }
+        }
+        displayUserInfo();
+        loadSkillsFromStorage();
+        renderSkills();
+        loadProficiencyFromStorage();
+    }
+
+    function displayUserInfo() {
+        if (userData) {
+            const fullName = `${userData.firstName || ''} ${userData.surname || ''}`.trim();
+            document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${fullName || 'Candidate'}`;
+            document.getElementById('userProfession').textContent = userData.profession || 'Professional';
+        }
+    }
+
+    function loadSkillsFromStorage() {
+        const saved = localStorage.getItem('userSkills');
+        if (saved) {
+            try {
+                skillsList = JSON.parse(saved);
+                if (!Array.isArray(skillsList)) skillsList = [];
+            } catch(e) { skillsList = []; }
+        }
+        // Default demo skills if empty
+        if (skillsList.length === 0) {
+            skillsList = ['JavaScript', 'React.js', 'Node.js', 'Communication'];
+        }
+    }
+
+    function saveSkillsToStorage() {
+        localStorage.setItem('userSkills', JSON.stringify(skillsList));
+    }
+
+    function renderSkills() {
+        const container = document.getElementById('skillsContainer');
+        if (!container) return;
+        
+        if (skillsList.length === 0) {
+            container.innerHTML = '<div class="empty-skills"><i class="fas fa-lightbulb"></i> No skills added yet. Start adding your top skills above.</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        skillsList.forEach((skill, index) => {
+            const tag = document.createElement('div');
+            tag.className = 'skill-tag';
+            tag.innerHTML = `${escapeHtml(skill)} <i class="fas fa-times-circle" onclick="removeSkill(${index})"></i>`;
+            container.appendChild(tag);
+        });
+        
+        // Hide error if skills exist
+        document.getElementById('skillError').style.display = 'none';
+    }
+
+    function addSkill() {
+        const input = document.getElementById('skillInput');
+        let skill = input.value.trim();
+        if (skill === "") {
+            showToast("Please enter a skill", "error");
+            return;
+        }
+        // Avoid duplicate (case-insensitive)
+        if (skillsList.some(s => s.toLowerCase() === skill.toLowerCase())) {
+            showToast("Skill already added", "error");
+            input.value = "";
+            return;
+        }
+        // Capitalize each word nicely (optional)
+        skill = skill.replace(/\b\w/g, c => c.toUpperCase());
+        skillsList.push(skill);
+        saveSkillsToStorage();
+        renderSkills();
+        input.value = "";
+        input.focus();
+        showToast(`"${skill}" added successfully`, "success");
+    }
+
+    function removeSkill(index) {
+        if (index >= 0 && index < skillsList.length) {
+            const removed = skillsList[index];
+            skillsList.splice(index, 1);
+            saveSkillsToStorage();
+            renderSkills();
+            showToast(`Removed "${removed}"`, "success");
+        }
+    }
+
+    // Proficiency handlers
+    function loadProficiencyFromStorage() {
+        const tech = localStorage.getItem('skillTechProficiency');
+        const soft = localStorage.getItem('skillSoftProficiency');
+        const lead = localStorage.getItem('skillLeadProficiency');
+        
+        if (tech) document.getElementById('techProficiency').value = tech;
+        if (soft) document.getElementById('softProficiency').value = soft;
+        if (lead) document.getElementById('leadProficiency').value = lead;
+        
+        updateProficiencyDisplay();
+        attachProficiencyListeners();
+    }
+    
+    function updateProficiencyDisplay() {
+        const techVal = document.getElementById('techProficiency').value;
+        const softVal = document.getElementById('softProficiency').value;
+        const leadVal = document.getElementById('leadProficiency').value;
+        document.getElementById('techValue').innerText = techVal + '%';
+        document.getElementById('softValue').innerText = softVal + '%';
+        document.getElementById('leadValue').innerText = leadVal + '%';
+    }
+    
+    function attachProficiencyListeners() {
+        const techSlider = document.getElementById('techProficiency');
+        const softSlider = document.getElementById('softProficiency');
+        const leadSlider = document.getElementById('leadProficiency');
+        
+        techSlider.addEventListener('input', () => {
+            document.getElementById('techValue').innerText = techSlider.value + '%';
+            localStorage.setItem('skillTechProficiency', techSlider.value);
+        });
+        softSlider.addEventListener('input', () => {
+            document.getElementById('softValue').innerText = softSlider.value + '%';
+            localStorage.setItem('skillSoftProficiency', softSlider.value);
+        });
+        leadSlider.addEventListener('input', () => {
+            document.getElementById('leadValue').innerText = leadSlider.value + '%';
+            localStorage.setItem('skillLeadProficiency', leadSlider.value);
+        });
+    }
+
+    function validateSkills() {
+        if (skillsList.length === 0) {
+            document.getElementById('skillError').style.display = 'block';
+            return false;
+        }
+        document.getElementById('skillError').style.display = 'none';
+        return true;
+    }
+
+    function validateAndProceed() {
+        if (!validateSkills()) {
+            showToast("Please add at least one skill before proceeding", "error");
+            return;
+        }
+        // Save all data before moving to certification page
+        saveSkillsToStorage();
+        // Save proficiency values already saved via listeners
+        showToast("Skills saved! Redirecting to Certifications...", "success");
+        setTimeout(() => {
+            window.location.href = '/certification';
+        }, 600);
+    }
+
+    function goToEducation() {
+        saveSkillsToStorage();
+        window.location.href = '/education';
+    }
+
+    function goToEducationPage() {
+        saveSkillsToStorage();
+        window.location.href = '/education';
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.querySelector('span').textContent = message;
+        toast.style.background = type === 'error' ? '#ef4444' : '#10b981';
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.style.background = '#10b981';
+        }, 3000);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Allow Enter key to add skill
+    document.getElementById('skillInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addSkill();
+        }
+    });
+
+    loadUserData();
+</script>
+</body>
+</html>

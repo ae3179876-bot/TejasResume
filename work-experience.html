@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Work Experience | Resume Builder</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 24px;
+            position: relative;
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        .header-section h1 {
+            font-size: 2.8rem;
+            color: white;
+            margin-bottom: 12px;
+            font-weight: 800;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-section p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+        }
+
+        .main-card {
+            background: white;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .user-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 32px 48px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .user-info h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .user-info .profession {
+            color: #94a3b8;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-icon {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .content-wrapper {
+            padding: 48px;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid #3b82f6;
+            padding-left: 18px;
+        }
+
+        .section-title i {
+            color: #3b82f6;
+        }
+
+        .experience-card {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 28px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .exp-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .remove-exp-btn {
+            background: #fee2e2;
+            border: none;
+            color: #dc2626;
+            padding: 8px 16px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .remove-exp-btn:hover {
+            background: #fecaca;
+            transform: scale(0.98);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #334155;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .input-group input, .input-group textarea {
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .error-border {
+            border-color: #ef4444 !important;
+        }
+
+        .error-text {
+            color: #ef4444;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        .add-experience-btn {
+            background: white;
+            border: 2px dashed #3b82f6;
+            color: #3b82f6;
+            padding: 14px 24px;
+            border-radius: 60px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            margin-top: 16px;
+            width: 100%;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .add-experience-btn:hover {
+            background: #eff6ff;
+            border-color: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        .bottom-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 48px;
+            padding-top: 32px;
+            border-top: 2px solid #e2e8f0;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .nav-btn.back {
+            background: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .nav-btn.back:hover {
+            background: #e2e8f0;
+            transform: translateX(-5px);
+        }
+
+        .nav-btn.next {
+            background: #0f172a;
+            color: white;
+        }
+
+        .nav-btn.next:hover {
+            background: #1e293b;
+            transform: translateX(5px);
+            box-shadow: 0 8px 16px -6px rgba(0,0,0,0.2);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            background: #f1f5f9;
+            border-radius: 24px;
+            color: #64748b;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 16px; }
+            .header-section h1 { font-size: 1.8rem; }
+            .user-banner { padding: 24px; flex-direction: column; text-align: center; }
+            .content-wrapper { padding: 24px; }
+            .bottom-nav { flex-direction: column; }
+            .nav-btn { width: 100%; justify-content: center; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="container">
+    <div class="header-section">
+        <h1><i class="fas fa-briefcase"></i> Work Experience</h1>
+        <p>Showcase your professional journey and achievements</p>
+    </div>
+
+    <div class="main-card">
+        <div class="user-banner" id="userBanner">
+            <div class="user-info">
+                <h2 id="userName">Loading...</h2>
+                <div class="profession">
+                    <i class="fas fa-user-tie"></i>
+                    <span id="userProfession">-</span>
+                </div>
+            </div>
+            <div class="action-buttons">
+                
+            </div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="section-title">
+                <i class="fas fa-history"></i>
+                <span>Your Work History</span>
+            </div>
+
+            <div id="experiencesContainer">
+                <!-- Dynamic experience cards will be injected here -->
+            </div>
+
+            <button class="add-experience-btn" id="addExpBtn">
+                <i class="fas fa-plus-circle"></i> Add Another Experience
+            </button>
+
+            <div class="bottom-nav">
+                <button class="nav-btn back" onclick="goToSummaryPage()">
+                    <i class="fas fa-chevron-left"></i> Back to Summary
+                </button>
+                <button class="nav-btn next" onclick="validateAndProceed()">
+                    Next: Education <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast">
+    <i class="fas fa-check-circle"></i>
+    <span>Message</span>
+</div>
+
+<script>
+    let userData = null;
+    let experiences = [];
+
+    const cursor = document.getElementById('cursorGlow');
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+    });
+
+    function loadUserData() {
+        const storedData = localStorage.getItem('resumeUserData');
+        if (storedData) {
+            userData = JSON.parse(storedData);
+        } else {
+            const draftData = localStorage.getItem('resumeUserDraft');
+            if (draftData) {
+                userData = JSON.parse(draftData);
+            } else {
+                userData = { firstName: "Alex", surname: "Johnson", profession: "Software Engineer" };
+            }
+        }
+        displayUserInfo();
+        loadExperiencesFromStorage();
+        renderExperiences();
+    }
+
+    function displayUserInfo() {
+        if (userData) {
+            const fullName = `${userData.firstName || ''} ${userData.surname || ''}`.trim();
+            document.getElementById('userName').innerHTML = `<i class="fas fa-user-circle"></i> ${fullName || 'Professional'}`;
+            document.getElementById('userProfession').textContent = userData.profession || 'Professional';
+        }
+    }
+
+    function loadExperiencesFromStorage() {
+        const saved = localStorage.getItem('workExperiences');
+        if (saved) {
+            try {
+                const allExperiences = JSON.parse(saved);
+                if (Array.isArray(allExperiences)) {
+                    experiences = allExperiences.filter(exp => 
+                        exp && typeof exp === 'object' &&
+                        exp.jobTitle && exp.jobTitle.trim() !== '' && 
+                        exp.company && exp.company.trim() !== ''
+                    );
+                } else {
+                    experiences = [];
+                }
+            } catch(e) { 
+                experiences = []; 
+            }
+        }
+        
+        if (experiences.length === 0) {
+            experiences = [{
+                id: Date.now(),
+                jobTitle: '',
+                company: '',
+                location: '',
+                startDate: '',
+                endDate: '',
+                currentlyWorking: false,
+                description: ''
+            }];
+        }
+    }
+
+    function saveExperiencesToStorage() {
+        const validExperiences = experiences.filter(exp => 
+            exp.jobTitle && exp.jobTitle.trim() !== '' &&
+            exp.company && exp.company.trim() !== ''
+        );
+        localStorage.setItem('workExperiences', JSON.stringify(validExperiences));
+        console.log("Saved work experiences:", validExperiences);
+    }
+
+    function createEmptyExperience() {
+        return {
+            id: Date.now() + Math.random(),
+            jobTitle: '',
+            company: '',
+            location: '',
+            startDate: '',
+            endDate: '',
+            currentlyWorking: false,
+            description: ''
+        };
+    }
+
+    function renderExperiences() {
+        const container = document.getElementById('experiencesContainer');
+        if (!container) return;
+        
+        if (!experiences || experiences.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-briefcase" style="font-size: 3rem; margin-bottom: 12px; display: block;"></i>No work experience added yet. Click "Add Another Experience" to start.</div>`;
+            return;
+        }
+
+        container.innerHTML = '';
+        experiences.forEach((exp, index) => {
+            const card = document.createElement('div');
+            card.className = 'experience-card';
+            card.setAttribute('data-id', exp.id);
+            card.innerHTML = `
+                <div class="experience-header">
+                    <span class="exp-title"><i class="fas fa-building" style="margin-right: 8px;"></i> Experience #${index + 1}</span>
+                    <button type="button" class="remove-exp-btn" onclick="removeExperience(${exp.id})"><i class="fas fa-trash-alt"></i> Remove</button>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Job Title *</label>
+                        <input type="text" class="exp-jobtitle" value="${escapeHtml(exp.jobTitle || '')}" placeholder="e.g., Senior Frontend Developer">
+                        <div class="error-text jobtitle-error" style="display: none;">Job title is required</div>
+                    </div>
+                    <div class="input-group">
+                        <label>Company / Organization *</label>
+                        <input type="text" class="exp-company" value="${escapeHtml(exp.company || '')}" placeholder="e.g., Google, Microsoft">
+                        <div class="error-text company-error" style="display: none;">Company name is required</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group">
+                        <label>Location</label>
+                        <input type="text" class="exp-location" value="${escapeHtml(exp.location || '')}" placeholder="City, Country (optional)">
+                    </div>
+                    <div class="input-group">
+                        <label>Start Date</label>
+                        <input type="month" class="exp-startdate" value="${exp.startDate || ''}">
+                    </div>
+                    <div class="input-group">
+                        <label>End Date</label>
+                        <input type="month" class="exp-enddate" value="${exp.endDate || ''}" ${exp.currentlyWorking ? 'disabled' : ''}>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="input-group" style="flex-direction: row; align-items: center; gap: 12px;">
+                        <input type="checkbox" class="exp-currentwork" id="current_${exp.id}" ${exp.currentlyWorking ? 'checked' : ''}>
+                        <label for="current_${exp.id}" style="margin:0;">I currently work here</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Job Description & Achievements</label>
+                    <textarea class="exp-description" rows="3" placeholder="Describe your responsibilities, achievements, technologies used...">${escapeHtml(exp.description || '')}</textarea>
+                </div>
+            `;
+
+            const currentCheckbox = card.querySelector('.exp-currentwork');
+            const endDateInput = card.querySelector('.exp-enddate');
+            const jobTitleInput = card.querySelector('.exp-jobtitle');
+            const companyInput = card.querySelector('.exp-company');
+            const jobTitleError = card.querySelector('.jobtitle-error');
+            const companyError = card.querySelector('.company-error');
+
+            currentCheckbox.addEventListener('change', (e) => {
+                const isChecked = e.target.checked;
+                endDateInput.disabled = isChecked;
+                if (isChecked) {
+                    endDateInput.value = '';
+                }
+                const expId = parseInt(card.getAttribute('data-id'));
+                const foundExp = experiences.find(e => e.id === expId);
+                if (foundExp) foundExp.currentlyWorking = isChecked;
+            });
+
+            const locationInput = card.querySelector('.exp-location');
+            const startDateInput = card.querySelector('.exp-startdate');
+            const endDateInputField = card.querySelector('.exp-enddate');
+            const descTextarea = card.querySelector('.exp-description');
+
+            const updateField = (field, value) => {
+                const expId = parseInt(card.getAttribute('data-id'));
+                const targetExp = experiences.find(e => e.id === expId);
+                if (targetExp) {
+                    targetExp[field] = value;
+                }
+            };
+
+            jobTitleInput.addEventListener('input', (e) => {
+                updateField('jobTitle', e.target.value);
+                if (e.target.value.trim()) {
+                    jobTitleError.style.display = 'none';
+                    jobTitleInput.classList.remove('error-border');
+                }
+            });
+            companyInput.addEventListener('input', (e) => {
+                updateField('company', e.target.value);
+                if (e.target.value.trim()) {
+                    companyError.style.display = 'none';
+                    companyInput.classList.remove('error-border');
+                }
+            });
+            locationInput.addEventListener('input', (e) => updateField('location', e.target.value));
+            startDateInput.addEventListener('change', (e) => updateField('startDate', e.target.value));
+            endDateInputField.addEventListener('change', (e) => {
+                if (!currentCheckbox.checked) updateField('endDate', e.target.value);
+            });
+            descTextarea.addEventListener('input', (e) => updateField('description', e.target.value));
+
+            container.appendChild(card);
+        });
+    }
+
+    function removeExperience(id) {
+        if (experiences.length === 1) {
+            const expIndex = experiences.findIndex(e => e.id === id);
+            if (expIndex !== -1) {
+                experiences[expIndex] = {
+                    id: Date.now(),
+                    jobTitle: '',
+                    company: '',
+                    location: '',
+                    startDate: '',
+                    endDate: '',
+                    currentlyWorking: false,
+                    description: ''
+                };
+                renderExperiences();
+                showToast("Cleared - please add your work experience details", "info");
+            }
+            return;
+        }
+        experiences = experiences.filter(exp => exp.id !== id);
+        renderExperiences();
+        showToast("Experience removed", "success");
+    }
+
+    function validateAndProceed() {
+        // Get fresh values from DOM
+        const cards = document.querySelectorAll('.experience-card');
+        let hasValid = false;
+        
+        for (let card of cards) {
+            const jobTitle = card.querySelector('.exp-jobtitle').value.trim();
+            const company = card.querySelector('.exp-company').value.trim();
+            const jobTitleError = card.querySelector('.jobtitle-error');
+            const companyError = card.querySelector('.company-error');
+            const jobTitleInput = card.querySelector('.exp-jobtitle');
+            const companyInput = card.querySelector('.exp-company');
+            
+            let cardValid = true;
+            
+            if (!jobTitle) {
+                jobTitleError.style.display = 'block';
+                jobTitleInput.classList.add('error-border');
+                cardValid = false;
+            } else {
+                jobTitleError.style.display = 'none';
+                jobTitleInput.classList.remove('error-border');
+            }
+            
+            if (!company) {
+                companyError.style.display = 'block';
+                companyInput.classList.add('error-border');
+                cardValid = false;
+            } else {
+                companyError.style.display = 'none';
+                companyInput.classList.remove('error-border');
+            }
+            
+            if (cardValid) {
+                hasValid = true;
+                // Update the experiences array
+                const expId = parseInt(card.getAttribute('data-id'));
+                const expIndex = experiences.findIndex(e => e.id === expId);
+                if (expIndex !== -1) {
+                    experiences[expIndex].jobTitle = jobTitle;
+                    experiences[expIndex].company = company;
+                    experiences[expIndex].location = card.querySelector('.exp-location').value;
+                    experiences[expIndex].startDate = card.querySelector('.exp-startdate').value;
+                    experiences[expIndex].currentlyWorking = card.querySelector('.exp-currentwork').checked;
+                    if (!experiences[expIndex].currentlyWorking) {
+                        experiences[expIndex].endDate = card.querySelector('.exp-enddate').value;
+                    } else {
+                        experiences[expIndex].endDate = '';
+                    }
+                    experiences[expIndex].description = card.querySelector('.exp-description').value;
+                }
+            }
+        }
+        
+        if (!hasValid) {
+            showToast("Please fill Job Title and Company for at least one work experience", "error");
+            return;
+        }
+        
+        // Date validation
+        let dateValid = true;
+        for (let card of cards) {
+            const start = card.querySelector('.exp-startdate').value;
+            const end = card.querySelector('.exp-enddate').value;
+            const currentlyWorking = card.querySelector('.exp-currentwork').checked;
+            if (start && end && !currentlyWorking) {
+                if (new Date(end) < new Date(start)) {
+                    showToast("End date cannot be earlier than start date", "error");
+                    dateValid = false;
+                    break;
+                }
+            }
+        }
+        if (!dateValid) return;
+        
+        saveExperiencesToStorage();
+        showToast("Work experience saved! Redirecting to Education page...", "success");
+        setTimeout(() => {
+            window.location.href = '/education';
+        }, 600);
+    }
+
+    function goToSummaryPage() {
+        saveExperiencesToStorage();
+        window.location.href = '/summary';
+    }
+
+    function showToast(message, type = 'success') {
+        const toast = document.getElementById('toast');
+        toast.querySelector('span').textContent = message;
+        toast.style.background = type === 'error' ? '#ef4444' : (type === 'info' ? '#3b82f6' : '#10b981');
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+            toast.style.background = '#10b981';
+        }, 3000);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    document.getElementById('addExpBtn').addEventListener('click', () => {
+        const newExp = createEmptyExperience();
+        experiences.push(newExp);
+        renderExperiences();
+        showToast("New experience added", "success");
+        setTimeout(() => {
+            const container = document.getElementById('experiencesContainer');
+            if (container.lastChild) {
+                container.lastChild.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                const jobTitleInput = container.lastChild.querySelector('.exp-jobtitle');
+                if (jobTitleInput) jobTitleInput.focus();
+            }
+        }, 100);
+    });
+
+    loadUserData();
+</script>
+</body>
+</html>

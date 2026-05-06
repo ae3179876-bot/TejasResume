@@ -1,0 +1,10 @@
+flask
+flask-cors
+openai
+python-dotenv
+requests
+numpy
+pandas
+scikit-learn
+PyPDF2
+reportlab
