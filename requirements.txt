@@ -8,3 +8,4 @@ pandas
 scikit-learn
 PyPDF2
 reportlab
+gunicorn==22.0.0
