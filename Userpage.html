@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Resume Builder | User Details</title>
+    <title>ResumeForge | Your Details</title>
     <!-- Google Fonts + Font Awesome Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * {
@@ -15,31 +15,32 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f5f7fc 0%, #e9eef4 100%);
-            color: #1a2c3e;
+            font-family: 'Space Grotesk', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #0a0e27, #060914);
+            color: #eef2ff;
             line-height: 1.5;
             min-height: 100vh;
             padding: 24px;
         }
 
-        /* Main App Container - Full width, no sidebar */
+        /* Main App Container - Glassmorphic premium */
         .app-wrapper {
-            max-width: 1280px;
+            max-width: 1300px;
             margin: 0 auto;
-            background: #ffffff;
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+            background: rgba(10, 14, 35, 0.75);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            box-shadow: 0 25px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 210, 255, 0.1);
             overflow: hidden;
             display: flex;
             flex-direction: column;
         }
 
-        /* Header */
+        /* Header - Neon touch */
         .header {
-            background: white;
-            padding: 24px 40px;
-            border-bottom: 1px solid #eef2f6;
+            background: rgba(5, 8, 22, 0.6);
+            padding: 22px 44px;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.2);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -50,53 +51,111 @@
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .logo-icon {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
-            width: 44px;
-            height: 44px;
-            border-radius: 18px;
+            background: linear-gradient(145deg, #00d2ff, #3a7bd5);
+            width: 48px;
+            height: 48px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1.4rem;
-            box-shadow: 0 6px 12px -6px rgba(0,0,0,0.1);
+            color: #0a0c1a;
+            font-size: 1.5rem;
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
         }
 
         .header h1 {
-            font-size: 1.6rem;
+            font-size: 1.7rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #1e293b, #2d3a4b);
+            background: linear-gradient(135deg, #ffffff, #00d2ff);
             background-clip: text;
             -webkit-background-clip: text;
             color: transparent;
+            letter-spacing: -0.5px;
         }
 
         .header-badge {
-            background: #eef2ff;
-            padding: 8px 18px;
+            background: rgba(0, 210, 255, 0.12);
+            padding: 8px 22px;
             border-radius: 40px;
             font-size: 0.85rem;
             font-weight: 600;
-            color: #2563eb;
+            color: #00d2ff;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            border: 1px solid rgba(0, 210, 255, 0.3);
+            backdrop-filter: blur(4px);
         }
 
-        /* Form container */
+        /* Progress Steps - Futuristic timeline */
+        .progress-steps {
+            background: rgba(5, 8, 22, 0.5);
+            padding: 18px 44px;
+            border-bottom: 1px solid rgba(0, 210, 255, 0.12);
+            display: flex;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #5b6e9e;
+        }
+
+        .step.active {
+            color: #00d2ff;
+        }
+
+        .step.active .step-number {
+            background: linear-gradient(145deg, #00d2ff, #3a7bd5);
+            color: #0a0c1a;
+            border-color: transparent;
+            box-shadow: 0 0 12px rgba(0, 210, 255, 0.5);
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 30px;
+            background: rgba(20, 25, 50, 0.8);
+            border: 1px solid #2a2f55;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #8b9dcc;
+        }
+
+        .step.completed .step-number {
+            background: #00d2ff;
+            border-color: #00d2ff;
+            color: #0a0c1a;
+            box-shadow: 0 0 8px rgba(0, 210, 255, 0.3);
+        }
+
+        .step.completed {
+            color: #a5f3fc;
+        }
+
+        /* Form Container */
         .form-container {
-            padding: 40px 48px;
+            padding: 44px 52px;
             flex: 1;
         }
 
         .form-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 28px 36px;
+            gap: 28px 40px;
         }
 
         .input-group {
@@ -111,76 +170,82 @@
 
         label {
             font-weight: 600;
-            font-size: 0.85rem;
-            color: #334155;
-            letter-spacing: -0.2px;
+            font-size: 0.8rem;
+            color: #a5b4fc;
+            letter-spacing: 0.3px;
             display: flex;
             align-items: center;
             gap: 8px;
+            text-transform: uppercase;
         }
 
         label i {
-            color: #3b82f6;
+            color: #00d2ff;
             width: 18px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         input {
-            padding: 14px 18px;
-            border: 1.5px solid #e2e8f0;
+            padding: 14px 20px;
+            border: 1.5px solid #1e2445;
             border-radius: 20px;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
             font-size: 0.95rem;
-            transition: all 0.2s;
-            background: #fefefe;
+            transition: all 0.25s ease;
+            background: rgba(8, 11, 28, 0.8);
+            color: #eef2ff;
             outline: none;
         }
 
         input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59,130,246,0.12);
+            border-color: #00d2ff;
+            box-shadow: 0 0 0 4px rgba(0, 210, 255, 0.15);
+            background: rgba(12, 16, 35, 0.95);
+        }
+
+        input::placeholder {
+            color: #4a5578;
         }
 
         .error-msg {
             font-size: 0.7rem;
-            color: #e53e3e;
+            color: #ff6b6b;
             margin-top: 4px;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
         }
 
         input.error-border {
-            border-color: #f87171;
-            background-color: #fff5f5;
+            border-color: #ff4757;
+            background: rgba(255, 71, 87, 0.08);
         }
 
-        /* Buttons : Back + Next */
+        /* Buttons - Cyber style */
         .action-buttons {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 48px;
-            border-top: 1px solid #edf2f7;
-            padding-top: 36px;
+            margin-top: 52px;
+            border-top: 1px solid rgba(0, 210, 255, 0.15);
+            padding-top: 40px;
             flex-wrap: wrap;
             gap: 20px;
         }
 
         .back-btn {
-            background: #f1f5f9;
-            color: #1e293b;
-            border: none;
-            padding: 14px 32px;
-            border-radius: 44px;
+            background: rgba(30, 35, 65, 0.8);
+            color: #cbd5ff;
+            border: 1px solid #2a2f55;
+            padding: 14px 34px;
+            border-radius: 40px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: all 0.25s ease;
         }
 
         .back-btn i {
@@ -188,24 +253,26 @@
         }
 
         .back-btn:hover {
-            background: #e2e8f0;
+            background: rgba(0, 210, 255, 0.12);
+            border-color: #00d2ff;
+            color: #00d2ff;
             transform: translateY(-2px);
         }
 
         .next-btn {
-            background: #0f172a;
-            color: white;
+            background: linear-gradient(105deg, #00d2ff, #3a7bd5);
+            color: #0a0c1a;
             border: none;
-            padding: 14px 38px;
-            border-radius: 44px;
-            font-weight: 600;
+            padding: 14px 42px;
+            border-radius: 40px;
+            font-weight: 700;
             font-size: 0.95rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 18px -8px rgba(15,23,42,0.3);
+            transition: all 0.25s ease;
+            box-shadow: 0 8px 20px -8px rgba(0, 210, 255, 0.4);
         }
 
         .next-btn i {
@@ -213,71 +280,20 @@
         }
 
         .next-btn:hover {
-            background: #1e293b;
             transform: translateY(-2px);
-            box-shadow: 0 12px 22px -10px rgba(15,23,42,0.4);
+            box-shadow: 0 15px 28px -10px rgba(0, 210, 255, 0.6);
+            filter: brightness(1.05);
         }
 
         /* Footer */
         .footer {
-            background: #f8fafc;
-            padding: 20px 40px;
+            background: rgba(5, 8, 22, 0.6);
+            padding: 20px 44px;
             text-align: center;
-            border-top: 1px solid #eef2f6;
-            font-size: 0.75rem;
-            color: #5b6e8c;
-        }
-
-        /* Progress Steps (replaces sidebar visual) */
-        .progress-steps {
-            background: #f9fafb;
-            padding: 16px 40px;
-            border-bottom: 1px solid #eef2f6;
-            display: flex;
-            gap: 32px;
-            flex-wrap: wrap;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #94a3b8;
-        }
-
-        .step.active {
-            color: #0f172a;
-        }
-
-        .step.active .step-number {
-            background: #0f172a;
-            color: white;
-            border-color: #0f172a;
-        }
-
-        .step-number {
-            width: 28px;
-            height: 28px;
-            border-radius: 30px;
-            background: white;
-            border: 1.5px solid #cbd5e1;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .step.completed .step-number {
-            background: #10b981;
-            border-color: #10b981;
-            color: white;
-        }
-
-        .step.completed {
-            color: #10b981;
+            border-top: 1px solid rgba(0, 210, 255, 0.1);
+            font-size: 0.7rem;
+            color: #6a7a9e;
+            letter-spacing: 0.5px;
         }
 
         /* Responsive */
@@ -293,10 +309,14 @@
                 grid-column: span 1;
             }
             .form-container {
-                padding: 28px 24px;
+                padding: 32px 24px;
             }
             .header {
                 padding: 18px 24px;
+            }
+            .progress-steps {
+                padding: 14px 24px;
+                gap: 24px;
             }
             .action-buttons {
                 flex-direction: column-reverse;
@@ -305,10 +325,6 @@
             .back-btn, .next-btn {
                 justify-content: center;
             }
-            .progress-steps {
-                padding: 12px 24px;
-                gap: 20px;
-            }
         }
 
         @media (max-width: 480px) {
@@ -316,63 +332,62 @@
                 display: none;
             }
             .step-number {
-                width: 32px;
-                height: 32px;
+                width: 36px;
+                height: 36px;
             }
         }
     </style>
 </head>
 <body>
 <div class="app-wrapper">
-    <!-- Header Section with logo & badge (clean) -->
+    <!-- Header Section - New dark premium -->
     <header class="header">
         <div class="logo-area">
             <div class="logo-icon">
-                <i class="fas fa-file-alt"></i>
+                <i class="fas fa-feather-alt"></i>
             </div>
-            <h1><i class="fas fa-id-card" style="margin-right: 8px; color: #3b82f6;"></i> User Details</h1>
+            <h1><i class="fas fa-id-card" style="margin-right: 8px; color: #00d2ff;"></i> Profile Details</h1>
         </div>
         <div class="header-badge">
-            <i class="fas fa-check-circle"></i> Step 1 of 2
+            <i class="fas fa-crown"></i> Step 1 of 2
         </div>
     </header>
 
-    <!-- Simple progress indicator (replaces sidebar) -->
+    <!-- Progress indicator - redesigned -->
     <div class="progress-steps">
         <div class="step active">
             <span class="step-number">1</span>
             <span>Personal Info</span>
         </div>
-       
     </div>
 
-    <!-- Main Form Area -->
+    <!-- Main Form Area - same fields, new look -->
     <div class="form-container">
         <form id="userForm" novalidate>
             <div class="form-grid">
                 <!-- First Name & Surname -->
                 <div class="input-group">
-                    <label><i class="fas fa-user"></i> First Name *</label>
-                    <input type="text" id="firstName" placeholder="e.g., Raj" autocomplete="given-name">
+                    <label><i class="fas fa-star"></i> First Name *</label>
+                    <input type="text" id="firstName" placeholder="e.g., Arjun" autocomplete="given-name">
                     <div class="error-msg" id="firstNameError"></div>
                 </div>
                 <div class="input-group">
-                    <label><i class="fas fa-user-tag"></i> Surname *</label>
-                    <input type="text" id="surname" placeholder="e.g., Sharma" autocomplete="family-name">
+                    <label><i class="fas fa-star"></i> Surname *</label>
+                    <input type="text" id="surname" placeholder="e.g., Mehta" autocomplete="family-name">
                     <div class="error-msg" id="surnameError"></div>
                 </div>
 
                 <!-- Profession (full width) -->
                 <div class="input-group full-width">
-                    <label><i class="fas fa-briefcase"></i> Profession / Title *</label>
-                    <input type="text" id="profession" placeholder="e.g., Frontend Developer, Product Manager">
+                    <label><i class="fas fa-bolt"></i> Profession / Title *</label>
+                    <input type="text" id="profession" placeholder="e.g., Full Stack Developer, AI Engineer">
                     <div class="error-msg" id="professionError"></div>
                 </div>
 
                 <!-- Email & Phone -->
                 <div class="input-group">
                     <label><i class="fas fa-envelope"></i> Email Address *</label>
-                    <input type="email" id="email" placeholder="hello@example.com" autocomplete="email">
+                    <input type="email" id="email" placeholder="hello@domain.com" autocomplete="email">
                     <div class="error-msg" id="emailError"></div>
                 </div>
                 <div class="input-group">
@@ -395,7 +410,7 @@
 
                 <!-- Pincode + LinkedIn -->
                 <div class="input-group">
-                    <label><i class="fas fa-map-pin"></i> PIN Code *</label>
+                    <label><i class="fas fa-map-marker-alt"></i> PIN Code *</label>
                     <input type="text" id="pincode" placeholder="400001" maxlength="10">
                     <div class="error-msg" id="pincodeError"></div>
                 </div>
@@ -408,7 +423,7 @@
 
             <div class="action-buttons">
                 <button type="button" id="backBtn" class="back-btn">
-                    <i class="fas fa-arrow-left"></i> Back to Welcome
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </button>
                 <button type="button" id="nextBtn" class="next-btn">
                     Next: Summary <i class="fas fa-arrow-right"></i>
@@ -418,13 +433,13 @@
     </div>
 
     <footer class="footer">
-        <i class="far fa-copyright"></i> 2025 Resume Builder — All fields marked * are required
+        <i class="fas fa-shield-alt"></i> Secure & encrypted • All fields marked * are required
     </footer>
 </div>
 
 <script>
     (function() {
-        // DOM elements
+        // DOM elements - same IDs maintained
         const firstName = document.getElementById('firstName');
         const surname = document.getElementById('surname');
         const profession = document.getElementById('profession');
@@ -446,7 +461,7 @@
         const pincodeErr = document.getElementById('pincodeError');
         const linkedinErr = document.getElementById('linkedinError');
 
-        // Helper: remove error style & message
+        // Helper functions - exactly same logic
         function clearError(inputElement, errorSpan) {
             if (inputElement) inputElement.classList.remove('error-border');
             if (errorSpan) errorSpan.innerHTML = '';
@@ -459,11 +474,10 @@
             if (errorSpan) errorSpan.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${message}`;
         }
 
-        // Validation function returns true if valid
+        // Validation function - exact same rules
         function validateForm() {
             let isValid = true;
 
-            // 1) First name
             const fnVal = firstName.value.trim();
             if (fnVal === '') {
                 setError(firstName, firstNameErr, 'First name is required');
@@ -475,7 +489,6 @@
                 clearError(firstName, firstNameErr);
             }
 
-            // 2) Surname
             const snVal = surname.value.trim();
             if (snVal === '') {
                 setError(surname, surnameErr, 'Surname is required');
@@ -487,7 +500,6 @@
                 clearError(surname, surnameErr);
             }
 
-            // 3) Profession
             const profVal = profession.value.trim();
             if (profVal === '') {
                 setError(profession, professionErr, 'Profession is required');
@@ -499,7 +511,6 @@
                 clearError(profession, professionErr);
             }
 
-            // 4) Email (required + regex)
             const emailVal = email.value.trim();
             const emailRegex = /^[^\s@]+@([^\s@]+\.)+[^\s@]+$/;
             if (emailVal === '') {
@@ -512,7 +523,6 @@
                 clearError(email, emailErr);
             }
 
-            // 5) Phone (non-empty, basic digits/+/space allowed — at least 6 digits)
             const phoneVal = phone.value.trim();
             const phoneDigits = phoneVal.replace(/[^\d+]/g, '');
             if (phoneVal === '') {
@@ -525,7 +535,6 @@
                 clearError(phone, phoneErr);
             }
 
-            // 6) City
             const cityVal = city.value.trim();
             if (cityVal === '') {
                 setError(city, cityErr, 'City is required');
@@ -534,7 +543,6 @@
                 clearError(city, cityErr);
             }
 
-            // 7) Country
             const countryVal = country.value.trim();
             if (countryVal === '') {
                 setError(country, countryErr, 'Country is required');
@@ -543,7 +551,6 @@
                 clearError(country, countryErr);
             }
 
-            // 8) PIN code (required, numeric length 4-10)
             const pinVal = pincode.value.trim();
             const pinRegex = /^[0-9]{4,10}$/;
             if (pinVal === '') {
@@ -556,7 +563,6 @@
                 clearError(pincode, pincodeErr);
             }
 
-            // 9) LinkedIn: optional, but if provided must be valid URL format
             const linkedinVal = linkedin.value.trim();
             if (linkedinVal !== '') {
                 const urlPattern = /^(https?:\/\/)/i;
@@ -576,7 +582,7 @@
             return isValid;
         }
 
-        // Save data to localStorage
+        // Save to localStorage
         function saveFormDataToLocal() {
             const formData = {
                 firstName: firstName.value.trim(),
@@ -593,27 +599,21 @@
             localStorage.setItem('resumeUserData', JSON.stringify(formData));
         }
 
-        // Redirect to summary.html
+        // Redirect to summary
         function goToSummaryPage() {
             if (validateForm()) {
                 saveFormDataToLocal();
-               window.location.href = '/summary';
+                window.location.href = '/summary';
             } else {
                 const firstErrorField = document.querySelector('.error-border');
                 if (firstErrorField) {
                     firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-                const nextBtn = document.getElementById('nextBtn');
-                if (nextBtn) {
-                    nextBtn.style.transform = 'translateX(4px)';
-                    setTimeout(() => { if(nextBtn) nextBtn.style.transform = ''; }, 200);
-                }
             }
         }
 
-        // Back button: navigate to welcomepage.html
+        // Back button function
         function goToWelcomePage() {
-            // Save draft before leaving so data is not lost
             const draftData = {
                 firstName: firstName.value.trim(),
                 surname: surname.value.trim(),
@@ -630,7 +630,7 @@
             window.location.href = '/';
         }
 
-        // Live validation blur handler
+        // Blur validation - same rules
         function attachBlurValidation() {
             const fields = [
                 { input: firstName, error: firstNameErr, validate: () => {
@@ -707,9 +707,8 @@
             });
         }
 
-        // Restore from saved data or draft
+        // Restore data - same logic
         function restoreData() {
-            // First check full resume data
             const savedData = localStorage.getItem('resumeUserData');
             if (savedData) {
                 try {
@@ -726,7 +725,6 @@
                     return;
                 } catch(e) {}
             }
-            // else try draft
             const draftData = localStorage.getItem('resumeUserDraft');
             if (draftData) {
                 try {
@@ -777,7 +775,6 @@
         attachBlurValidation();
         restoreData();
 
-        // Enter key triggers next if valid
         document.getElementById('userForm')?.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
